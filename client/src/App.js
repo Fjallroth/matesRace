@@ -23,15 +23,19 @@ const App = () =>{
       [
         {
           "id": 1,
-          "text": "Doctors Appointment",
-          "day": "Feb 5th at 2:30pm",
-          "reminder": true
+          "raceName": "funday",
+          "startDay": "datetime",
+          "endDay": "datetime",
+          "segments": [100294, 39482, 48283234, 42374429],
+          "raceInfo": "just a fun race between pals"
         },
         {
           "id": 2,
-          "text": "Meeting at School",
-          "day": "Feb 6th at 1:30pm",
-          "reminder": true
+          "raceName": "Sunday",
+          "startDay": "datetime",
+          "endDay": "datetime",
+          "segments": [100294, 39482, 48283234, 42374429],
+          "raceInfo": "just a fun race between pals"
         }
       ]
     
