@@ -3,9 +3,12 @@ import Tasks from "./components/Tasks";
 import {useState, useEffect} from 'react';
 import AddTask from "./components/AddTask";
 import RaceContainer from "./components/RaceContainer";
+import PlanRace from "./components/PlanRace";
+import AddRace from "./components/AddRace";
 
 const App = () =>{
-  const[showAddTask, setShowAddTask] = useState(true)
+  const[showPlanRace, setshowPlanRace] = useState(false)
+  const[showaddRace, setshowaddRace] = useState(false)
   const [tasks, setTasks] = useState([])
   useEffect(()=> {
     const getTasks = async () => {
@@ -86,12 +89,14 @@ const toggleReminder = async (id) =>{
   return (
     <div>
     <div className="container">
-      <Header buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask}/>
-      {showAddTask && <AddTask onAdd={addTask}/>}
+      <Header buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setshowPlanRace(!showPlanRace)} showAdd={showPlanRace}/>
+      {showPlanRace && <PlanRace onAdd={addTask}/>}
       
       </div>
       <div className="container">
-      <RaceContainer title={"Your upcoming races"} planRace={"https://www.bbc.com/"} buttonTitle={"Plan a race"}/>
+      <RaceContainer title={"Your upcoming races"} planRace={""} buttonTitle={"Join a race"} 
+      onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
+      {showaddRace && <AddRace onAdd={addTask}/>}
       {tasks.length > 0 ? 
       <Tasks tasks={tasks} onDelete={deleteTask}
       onToggle={toggleReminder}
@@ -104,7 +109,7 @@ const toggleReminder = async (id) =>{
       <Tasks tasks={tasks} onDelete={deleteTask}
       onToggle={toggleReminder}
       /> 
-      : "You haven't yet done any races"}
+      : "You haven't done any races"}
       </div>
     
     </div>
