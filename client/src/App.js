@@ -5,6 +5,7 @@ import AddTask from "./components/AddTask";
 import RaceContainer from "./components/RaceContainer";
 import PlanRace from "./components/PlanRace";
 import AddRace from "./components/AddRace";
+import PrevRaceContainer from "./components/PrevRaceContainer";
 
 const App = () =>{
   const[showPlanRace, setshowPlanRace] = useState(false)
@@ -98,7 +99,7 @@ const toggleReminder = async (id) =>{
       
       </div>
       <div className="container">
-      <RaceContainer title={"Your upcoming races"} planRace={""} buttonTitle={"Join a race"} 
+      <RaceContainer title={"Your upcoming races"} buttonTitle={"Join a race"} 
       onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
       {showaddRace && <AddRace onAdd={addTask}/>}
       {tasks.length > 0 ? 
@@ -108,7 +109,7 @@ const toggleReminder = async (id) =>{
       : "You have no upcoming races"}
       </div>
       <div className="container">
-      <RaceContainer title={"Your previous races"}/>
+      <PrevRaceContainer title={"Your previous races"}/>
       {tasks.length > 0 ? 
       <Tasks tasks={tasks} onDelete={deleteTask}
       onToggle={toggleReminder}
