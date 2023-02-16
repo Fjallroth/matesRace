@@ -1,6 +1,6 @@
 //rafce
 import Task from "./Task"
-const Tasks = ({tasks, onDelete, onToggle}) => {
+const Tasks = ({tasks, onDelete, onToggle, fetchRide}) => {
 
   return (
     <>
@@ -13,10 +13,9 @@ const Tasks = ({tasks, onDelete, onToggle}) => {
       endDay= {endDay}
       segments= {segments}
       raceInfo={raceInfo}
-    
-
       onDelete={onDelete}
       onToggle={onToggle}
+      fetchRide={fetchRide}
       />))} 
     </>
   )

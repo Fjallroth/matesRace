@@ -15,7 +15,7 @@ const onSubmit = (e) => {
     alert('Please add a task')
     return
   }
-  onAdd({raceName})
+  onAdd({raceName, startDay, endDay, segments, raceInfo})
 
   setRaceName('')
   setStart('')

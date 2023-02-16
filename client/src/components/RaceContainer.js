@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import Button from './Button'
 
-const RaceContainer = ({ title, planRace, buttonTitle, onAdd, showAdd, showButton}) => {
+const RaceContainer = ({ title, planRace, buttonTitle, onAdd, showAdd}) => {
   return (
     <div className='header'>
     <h1>{title}</h1>

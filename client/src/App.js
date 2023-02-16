@@ -1,7 +1,6 @@
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import {useState, useEffect} from 'react';
-import AddTask from "./components/AddTask";
 import RaceContainer from "./components/RaceContainer";
 import PlanRace from "./components/PlanRace";
 import AddRace from "./components/AddRace";
@@ -49,7 +48,17 @@ const App = () =>{
     const data = await res.json()
     return data
   }
-
+const planRace= async (race) =>{
+  console.log(race)
+  //make post request here
+}
+const addRace= async (race) =>{
+  console.log(race)
+}
+const fetchRide=async (race) =>{
+  console.log("upload Ride")
+  //make strava request here
+}
 const addTask= async (task) => {
   
   const res = await fetch(`http://localhost:5000/tasks/`, {
@@ -95,24 +104,25 @@ const toggleReminder = async (id) =>{
     <div>
     <div className="container">
       <Header buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setshowPlanRace(!showPlanRace)} showAdd={showPlanRace}/>
-      {showPlanRace && <PlanRace onAdd={addTask}/>}
+      {showPlanRace && <PlanRace onAdd={planRace}/>}
       
       </div>
       <div className="container">
       <RaceContainer title={"Your upcoming races"} buttonTitle={"Join a race"} 
       onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
-      {showaddRace && <AddRace onAdd={addTask}/>}
+      {showaddRace && <AddRace onAdd={addRace}/>}
       {tasks.length > 0 ? 
-      <Tasks tasks={tasks} onDelete={deleteTask}
+      <Tasks tasks={tasks} onDelete={deleteTask} 
       onToggle={toggleReminder}
+      fetchRide= {()=> fetchRide()}
       /> 
       : "You have no upcoming races"}
       </div>
       <div className="container">
       <PrevRaceContainer title={"Your previous races"}/>
       {tasks.length > 0 ? 
-      <Tasks tasks={tasks} onDelete={deleteTask}
-      onToggle={toggleReminder}
+      <Tasks tasks={tasks} onDelete={deleteTask} 
+      onToggle={toggleReminder} 
       /> 
       : "You haven't done any races"}
       </div>
