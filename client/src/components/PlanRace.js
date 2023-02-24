@@ -47,9 +47,9 @@ const onSubmit = (e) => {
             onChange={(e) => setEnd(e.target.value)} />
         </div>
         <div className='form-control'>
-            <label>Add Segments</label>
+            <label>Add Segments (For multiple segments separate them with a comma)</label>
             <input type="text" 
-            placeholder='SegmentID'
+            placeholder='e.g. 1723783,12336704,18239466'
             value = {segments}
             onChange={(e) => setSegments(e.target.value) }/>
         </div>

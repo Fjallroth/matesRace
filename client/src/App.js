@@ -54,10 +54,12 @@ const planRace= async (race) =>{
 }
 const addRace= async (race) =>{
   console.log(race)
+  //make DB find one and update to add user to race participant array
 }
 const fetchRide=async (race) =>{
-  console.log("upload Ride")
+  console.log("fetch rides from strava")
   //make strava request here
+  //
 }
 const addTask= async (task) => {
   
