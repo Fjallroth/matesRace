@@ -41,6 +41,7 @@ module.exports = {
     },
      planRace: async (req, res)=>{
         console.log(req.body)
+        console.log(req.user._id)
     //     try{
     //         await Races.create({Race: req.body, userId: req.user.id}) //change req.body
     //         console.log('Race has been added!')
@@ -52,6 +53,7 @@ module.exports = {
     },
     joinRace: async (req, res)=>{
         console.log(req.body)
+        console.log(req.user)
         // try{
         //     await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to join
         //         participants: "xyz" //add user ID to participant list

@@ -1,9 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const raceController = require('../controllers/raceMates') 
+const homeController = require('../controllers/home')
+
 const { ensureAuth } = require('../middleware/auth')
 
-router.get('/', ensureAuth, raceController.getRaces)
+router.get('/', homeController.getReact)// this conflicts with the landing
+
+//router.get('/', ensureAuth, raceController.getRaces)
 
 router.post('/planRace', raceController.planRace) // add ensure Auth
 
