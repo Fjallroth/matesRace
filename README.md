@@ -11,18 +11,18 @@ matesRace is a tool to allow friendly competition between friends without the us
 # Technologies
 -react
 -nodejs:
-    - bcrypt, 
-    - connect-mongo, 
-    - dotenv, ejs, express, 
-    - express-flash, 
-    - express-session, 
-    - mongodb, 
-    - mongoose, 
-    - morgan, 
-    - nodemon, 
-    - passport, 
-    - passport-local, 
-    - validator
+- bcrypt, 
+- connect-mongo, 
+- dotenv, ejs, express, 
+- express-flash, 
+- express-session, 
+- mongodb, 
+- mongoose, 
+- morgan, 
+- nodemon, 
+- passport, 
+- passport-local, 
+- validator
 - MongoDB
 - css
 

@@ -50,10 +50,25 @@ const App = () =>{
   }
 const planRace= async (race) =>{
   console.log(race)
+  const res = await fetch(`http://localhost:2121/raceMates/planRace`, {
+    method: 'POST',
+    headers:{
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(race)
+  })
+
   //make post request here
 }
 const addRace= async (race) =>{
   console.log(race)
+  const res = await fetch(`http://localhost:2121/raceMates/joinRace`, {
+    method: 'PUT',
+    headers:{
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(race)
+  })
   //make DB find one and update to add user to race participant array
 }
 const fetchRide=async (race) =>{

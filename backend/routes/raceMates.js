@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const raceController = require('../controllers/matesRace') 
+const raceController = require('../controllers/raceMates') 
 const { ensureAuth } = require('../middleware/auth')
 
 router.get('/', ensureAuth, raceController.getRaces)
 
-router.post('/planRace', ensureAuth, raceController.createNewRace)
+router.post('/planRace', raceController.planRace) // add ensure Auth
 
-router.put('/joinRace', ensureAuth, raceController.joinRace)
+router.put('/joinRace', raceController.joinRace) // add ensure Auth
 
 router.get('/selectRide', ensureAuth, raceController.selectRide)
 

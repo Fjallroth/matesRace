@@ -5,28 +5,28 @@ const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET 
 const callbackURL = 'http://127.0.0.1:2121/todos/StravaCallback'//change this
 
-async function getActivitySegments(data, userid){
-    const userid = req.user.id
-    const activityID = //get activity ID
-    fetch(`https://www.strava.com/api/v3/activities/${activityID}?access_token=${req.user.userStravaAccess}`)
-    .then(res => res.json())
-    .then(data=> getEfforts(data, userid) ) }
+// async function getActivitySegments(data, userid){
+//     //const userid = req.user.id
+//     const activityID = //get activity ID
+//     fetch(`https://www.strava.com/api/v3/activities/${activityID}?access_token=${req.user.userStravaAccess}`)
+//     .then(res => res.json())
+//     .then(data=> getEfforts(data, userid) ) }
 
     //this needs work
-async function getEfforts(data, userid){
-    const efforts = data.segment_efforts
-    if(typeof efforts !== "undefined"){
-        for(let i=0; i < efforts.length ; i++){ 
-            //change to update
-          await Race.create({
-              segmentId: efforts[i].segment.id, 
-              segmentName: efforts[i].segment.name, 
-              segmentTime: efforts[i].elapsed_time, 
-              completed: false, 
-              userId: userid})
+// async function getEfforts(data, userid){
+//     const efforts = data.segment_efforts
+//     if(typeof efforts !== "undefined"){
+//         for(let i=0; i < efforts.length ; i++){ 
+//             //change to update
+//           await Race.create({
+//               segmentId: efforts[i].segment.id, 
+//               segmentName: efforts[i].segment.name, 
+//               segmentTime: efforts[i].elapsed_time, 
+//               completed: false, 
+//               userId: userid})
 
-             console.log("effort added")
-          }}}
+//              console.log("effort added")
+//           }}}
 
 module.exports = {
     getRaces: async (req,res)=>{
@@ -39,26 +39,28 @@ module.exports = {
             res.status(500).json({ message: 'Server Error' });
         }
     },
-    planRace: async (req, res)=>{
-        try{
-            await Races.create({Race: req.body, userId: req.user.id}) //change req.body
-            console.log('Race has been added!')
-            res.redirect('/todos')
-        }catch(err){
-            console.log(err)
-            res.status(500).json({ message: 'Server Error' });
-        }
+     planRace: async (req, res)=>{
+        console.log(req.body)
+    //     try{
+    //         await Races.create({Race: req.body, userId: req.user.id}) //change req.body
+    //         console.log('Race has been added!')
+    //         res.redirect('/todos')
+        // }catch(err){
+        //     console.log(err)
+        //     res.status(500).json({ message: 'Server Error' });
+        // }
     },
     joinRace: async (req, res)=>{
-        try{
-            await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to join
-                participants: "xyz" //add user ID to participant list
-            })
-            res.json('Joined Race!')
-        }catch(err){
-            console.log(err)
-            res.status(500).json({ message: 'Server Error' });
-        }
+        console.log(req.body)
+        // try{
+        //     await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to join
+        //         participants: "xyz" //add user ID to participant list
+        //     })
+        //     res.json('Joined Race!')
+        // }catch(err){
+        //     console.log(err)
+        //     res.status(500).json({ message: 'Server Error' });
+        // }
     },
     selectRide: async (req, res) =>{
         const userid = req.user.id //how to get userid from react? add start time and end time to fetch
