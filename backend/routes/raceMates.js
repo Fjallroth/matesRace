@@ -5,9 +5,9 @@ const homeController = require('../controllers/home')
 
 const { ensureAuth } = require('../middleware/auth')
 
-router.get('/', homeController.getReact)// this conflicts with the landing
+router.get('/', homeController.getReact)
 
-//router.get('/', ensureAuth, raceController.getRaces)
+router.get('/races', raceController.getRaces)
 
 router.post('/planRace', raceController.planRace) // add ensure Auth
 

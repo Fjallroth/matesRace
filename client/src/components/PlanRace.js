@@ -7,21 +7,23 @@ const PlanRace = ({onAdd}) => {
   const [endDay, setEnd] = useState('')
   const [segments, setSegments] = useState('')
   const [raceInfo, setRaceInfo] = useState('')
+  const [partPass, setPartPass] = useState('')
 
 const onSubmit = (e) => {
   e.preventDefault()
 
   if(!raceName){
-    alert('Please add a task')
+    alert('Please add a race')
     return
   }
-  onAdd({raceName, startDay, endDay, segments, raceInfo})
+  onAdd({raceName, startDay, endDay, segments, raceInfo, partPass})
 
   setRaceName('')
   setStart('')
   setEnd('')
   setSegments('')
   setRaceInfo('')
+  setPartPass('')
 }
   return (
     <form className='add-form' onSubmit={onSubmit}>
@@ -59,6 +61,13 @@ const onSubmit = (e) => {
             placeholder='Race Info'
             value = {raceInfo}
             onChange={(e) => setRaceInfo(e.target.value) }/>
+        </div>
+        <div className='form-control'>
+            <label>Password for participants</label>
+            <input type="text" 
+            placeholder='this is stored in plain text unlike your actual password'
+            value = {partPass}
+            onChange={(e) => setPartPass(e.target.value) }/>
         </div>
         
         <input type="submit" value='Save Race' className='btn btn-block' />

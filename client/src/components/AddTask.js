@@ -10,7 +10,7 @@ const onSubmit = (e) => {
   e.preventDefault()
 
   if(!text){
-    alert('Please add a task')
+    alert('Please add a race')
     return
   }
   onAdd({text, day, reminder})

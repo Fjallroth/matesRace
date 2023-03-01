@@ -1,22 +1,23 @@
 //rafce
-import Task from "./Task"
-const Tasks = ({tasks, onDelete, onToggle, fetchRide}) => {
-
+import Race from "./Task"
+const Tasks = ({races, onDelete, onToggle, fetchRide}) => {
+  
   return (
     <>
-      {tasks.map((task, raceName, startDay, endDay, segments,raceInfo, index) => (
-      <Task 
-      key={index}
-      task={task} 
-      raceName={raceName}
-      startDay= {startDay}
-      endDay= {endDay}
-      segments= {segments}
-      raceInfo={raceInfo}
-      onDelete={onDelete}
-      onToggle={onToggle}
-      fetchRide={fetchRide}
-      />))} 
+   
+       {races.map((race) => (
+        <Race
+          key={race._id}
+          race={race}
+          raceName={race.raceName}
+          startDay={race.startDate}
+          endDay={race.endDate}
+          segments={race.segments}
+          participants={race.participants}
+          onDelete={onDelete}
+          onToggle={onToggle}
+          fetchRide={fetchRide}
+        />))} 
     </>
   )
 }

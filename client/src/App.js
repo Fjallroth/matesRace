@@ -9,42 +9,23 @@ import PrevRaceContainer from "./components/PrevRaceContainer";
 const App = () =>{
   const[showPlanRace, setshowPlanRace] = useState(false)
   const[showaddRace, setshowaddRace] = useState(false)
-  const [tasks, setTasks] = useState([])
+  const [races, setTasks] = useState([])
   useEffect(()=> {
-    const getTasks = async () => {
-    const tasksFromServer = await fetchRace()
-    setTasks(tasksFromServer)
+    const getRaces = async () => {
+    const racesFromServer = await fetchRace()
+    console.log(racesFromServer)
+    setTasks(racesFromServer.races)
     }
-    getTasks()
+    getRaces()
   }, [])
  //change this function to get DB race objects
   const fetchRace = async () =>{
-    const res = 
-      [
-        {
-          "id": 1,
-          "raceName": "funday",
-          "startDay": "datetime",
-          "endDay": "datetime",
-          "segments": [100294, 39482, 48283234, 42374429],
-          "raceInfo": "just a fun race between pals"
-        },
-        {
-          "id": 2,
-          "raceName": "Sunday",
-          "startDay": "datetime",
-          "endDay": "datetime",
-          "segments": [100294, 39482, 48283234, 42374429],
-          "raceInfo": "just a fun race between pals"
-        }
-      ]
-    
-    //await fetch('http://localhost:5000/tasks')
-    //const data = await res.json()
-    return res
+    const res = await fetch('http://localhost:2121/raceMates/races')
+    const data = await res.json()
+    return data
   }
   const fetchTasky = async (id) =>{
-    const res = await fetch(`http://localhost:5000/tasks/${id}`)
+    const res = await fetch(`http://localhost:5000/races/${id}`)
     const data = await res.json()
     return data
   }
@@ -76,35 +57,32 @@ const fetchRide=async (race) =>{
   //make strava request here
   //
 }
-const addTask= async (task) => {
+const addTask= async (race) => {
   
-  const res = await fetch(`http://localhost:5000/tasks/`, {
+  const res = await fetch(`http://localhost:5000/races/`, {
     method: 'POST',
     headers:{
       'Content-type': 'application/json'
     },
-    body: JSON.stringify(task)
+    body: JSON.stringify(race)
   })
   const data = await res.json()
 
-  setTasks([...tasks, data])
-  // const id = Math.floor(Math.random()*100000) +1
-  // const newTask = {id, ...task}
-  // setTasks([...tasks, newTask])
+  setTasks([...races, data])
 }
 
 const deleteTask = async (id) => {
-  await fetch(`http://localhost:5000/tasks/${id}`, {
+  await fetch(`http://localhost:5000/races/${id}`, {
     method: 'DELETE'
   })
-  setTasks(tasks.filter((task) => task.id !==id))
+  setTasks(races.filter((race) => race.id !==id))
 }
 
 const toggleReminder = async (id) =>{
-  const taskToToggle = await fetchTasky(id)
-  const updTask = {...taskToToggle, reminder: !taskToToggle,
-  reminder: !taskToToggle.reminder}
-  const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+  const raceToToggle = await fetchTasky(id)
+  const updTask = {...raceToToggle, reminder: !raceToToggle,
+  reminder: !raceToToggle.reminder}
+  const res = await fetch(`http://localhost:5000/races/${id}`, {
   method: 'PUT',
   headers:{
       'Content-type': 'application/json'
@@ -113,8 +91,8 @@ const toggleReminder = async (id) =>{
   })
   const data = await res.json()
 
-  setTasks(tasks.map((task) => task.id === id? 
-  {...task, reminder: data.reminder} : task))
+  setTasks(races.map((race) => race? //something wrong here
+  {...race, reminder: data.reminder} : race))
 }
 
   return (
@@ -128,8 +106,8 @@ const toggleReminder = async (id) =>{
       <RaceContainer title={"Your upcoming races"} buttonTitle={"Join a race"} 
       onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
       {showaddRace && <AddRace onAdd={addRace}/>}
-      {tasks.length > 0 ? 
-      <Tasks tasks={tasks} onDelete={deleteTask} 
+      {races.length > 0 ? 
+      <Tasks races={races} onDelete={deleteTask} 
       onToggle={toggleReminder}
       fetchRide= {()=> fetchRide()}
       /> 
@@ -137,8 +115,8 @@ const toggleReminder = async (id) =>{
       </div>
       <div className="container">
       <PrevRaceContainer title={"Your previous races"}/>
-      {tasks.length > 0 ? 
-      <Tasks tasks={tasks} onDelete={deleteTask} 
+      {races.length > 0 ? 
+      <Tasks races={races} onDelete={deleteTask} 
       onToggle={toggleReminder} 
       /> 
       : "You haven't done any races"}

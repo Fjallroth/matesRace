@@ -2,18 +2,20 @@ import React from 'react'
 import {FaTimes} from 'react-icons/fa'
 import Button from './Button'
 
-const task = ({task, onDelete, onToggle, fetchRide}) => {
+const Race = ({ race, onDelete, onToggle, fetchRide }) => {
   return (
-    <div className ={`task ${task.reminder ? 'reminder' : ''}`}  onDoubleClick={() => onToggle(task.id)}>
-        <h3>{task.raceName}  
-        <FaTimes style={{ color:'red', curson: 'pointer'}}
-        onClick={() => onDelete(task.id)}
-        /></h3>
-        <p>{task.segments}</p>
-        <Button color= {"green"} text={"upload ride"}
-      onClick={fetchRide}/>
+    <div className={`race ${race.reminder ? 'reminder' : ''}`} onDoubleClick={() => onToggle(race._id)}>
+      <h3>
+        {race.raceName}{' '}
+        <FaTimes
+          style={{ color: 'red', cursor: 'pointer' }}
+          onClick={() => onDelete(race._id)}
+        />
+      </h3>
+      <p>{race.segments.join(', ')}</p>
+      <Button color="green" text="Upload ride" onClick={fetchRide} />
     </div>
-  )
-}
+  );
+};
 
-export default task
+export default Race

@@ -32,8 +32,9 @@ module.exports = {
     getRaces: async (req,res)=>{
         console.log(req.user)
         try{
-            const races = await Races.find({userId:req.user.id})
-            res.json({ races })        
+            const races = await Races.find({"participants.user": req.user.id})
+            console.log({"races": races })  
+            res.json({"races": races })       
         }catch(err){
             console.log(err)
             res.status(500).json({ message: 'Server Error' });
@@ -42,14 +43,32 @@ module.exports = {
      planRace: async (req, res)=>{
         console.log(req.body)
         console.log(req.user._id)
-    //     try{
-    //         await Races.create({Race: req.body, userId: req.user.id}) //change req.body
-    //         console.log('Race has been added!')
-    //         res.redirect('/todos')
-        // }catch(err){
-        //     console.log(err)
-        //     res.status(500).json({ message: 'Server Error' });
-        // }
+         try{
+            let segmentArray = req.body.segments.split(',')
+            let getSegmentObj = function(segmentArray) {
+                let segmentObjs = []
+                for(let i=0; i<segmentArray.length ; i++){
+                    let segObj = {"segment": segmentArray[i], "segmentTime": ""}
+                    segmentObjs.push(segObj)
+                }
+                return segmentObjs
+            }
+            
+          await Races.create({organiserID: req.user.id, 
+                            raceName: req.body.raceName,
+                            startDate: Math.floor(new Date(req.body.startDay).getTime()/1000).toFixed(0),
+                            endDate: Math.floor((new Date(req.body.endDay).getTime()/1000).toFixed(0)),
+                            segments: segmentArray,
+                            raceInfo: req.body.raceInfo,
+                            partPass: req.body.partPass,
+                            participants: [{"user": req.user.id, "segments": getSegmentObj(segmentArray)}]
+                        }) 
+             console.log('Race has been added!')
+             res.redirect('/raceMates')
+         }catch(err){
+             console.log(err)
+             res.status(500).json({ message: 'Server Error' });
+         }
     },
     joinRace: async (req, res)=>{
         console.log(req.body)

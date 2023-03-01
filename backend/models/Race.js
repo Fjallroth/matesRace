@@ -1,54 +1,36 @@
 const mongoose = require('mongoose')
 
-const TodoSchema = new mongoose.Schema({
-  segmentId: {
+const RaceSchema = new mongoose.Schema({
+  raceName: {
     type: String,
-    required: false, 
+    required: true, 
   },
-  segmentName: {
-    type: String,
-    required: false,
-  },
-  segmentTime:{
+  startDate: {
     type: Number,
+    required: true,
+  },
+  endDate: {
+    type: Number,
+    required: true,
+  },
+  segments:{
+    type: Array,
     required: false,
   },
-  completed: {
-    type: Boolean,
-    required: false,
-  },
-  userId: {
+  organiserID: {
     type: String,
     required: true
   },
-  leaderBoard: {
+  partPass: {
+    type: String,
+    required: true
+  },
+  participants: {
     type: Array,
-    required: false
-  },
-  timeOffXom: {
-    type: Number,
-    required: false
-  },
-  xomTime: {
-    type: Number,
-    required: false
-  },
-  timeOffLB:{
-    type: Number,
-    required: false
-  },
-  percentageOff: {
-    type: Number,
-    required: false
-  },
-  percentOffLB:{
-    type: Number,
-    required: false
-  },
-  rank: {
-    type: Number,
-    required: false
-}
+    required: true
+  }
+  
+
 })
 
-module.exports = mongoose.model('Todo', TodoSchema)
+module.exports = mongoose.model('Race', RaceSchema)

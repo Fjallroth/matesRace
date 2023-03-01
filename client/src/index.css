@@ -92,18 +92,18 @@ body {
   width: 100%;
 }
 
-.task {
+.race {
   background: #f4f4f431;
   margin: 5px;
   padding: 10px 20px;
   cursor: pointer;
 }
 
-.task.reminder {
+.race.reminder {
   border-left: 5px solid green;
 }
 
-.task h3 {
+.race h3 {
   display: flex;
   align-items: center;
   justify-content: space-between;
