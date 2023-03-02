@@ -61,7 +61,7 @@ module.exports = {
                             segments: segmentArray,
                             raceInfo: req.body.raceInfo,
                             partPass: req.body.partPass,
-                            participants: [{"user": req.user.id, "segments": getSegmentObj(segmentArray)}]
+                            participants: [{"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(segmentArray)}]
                         }) 
              console.log('Race has been added!')
              res.redirect('/raceMates')
@@ -71,8 +71,27 @@ module.exports = {
          }
     },
     joinRace: async (req, res)=>{
-        console.log(req.body)
-        console.log(req.user)
+        try{
+            const races = await Races.findOne({"_id": req.body.raceID, "partPass": req.body.racePassword})
+            console.log(races.participants) 
+            let getSegmentObj = function(segmentArray) {
+                let segmentObjs = []
+                for(let i=0; i<segmentArray.length ; i++){
+                    let segObj = {"segment": segmentArray[i], "segmentTime": ""}
+                    segmentObjs.push(segObj)
+                }
+                return segmentObjs
+            }
+            const newPart = {"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(races.segments)}
+            await Races.findOneAndUpdate({"_id": req.body.raceID, "partPass": req.body.racePassword},
+                        { $push: { participants: newPart }}
+                     )
+            res.json({races})       
+        }catch(err){
+            console.log(err)
+            res.status(500).json({ message: 'Server Error' });
+        }
+
         // try{
         //     await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to join
         //         participants: "xyz" //add user ID to participant list
