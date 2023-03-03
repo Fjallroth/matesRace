@@ -11,6 +11,8 @@ const mainRoutes = require('./routes/main')
 const raceRoutes = require('./routes/raceMates')
 let cors = require('cors')
 const path = require('path')
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
 
 require('dotenv').config({path: './config/.env'})
 
@@ -18,7 +20,13 @@ require('dotenv').config({path: './config/.env'})
 require('./config/passport')(passport)
 
 connectDB()
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:2121'
+}))
+// app.use('/strava', createProxyMiddleware({
+//   target: 'https://www.strava.com',
+//   changeOrigin: true,
+// }));
 app.set('view engine', 'ejs')
 app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.urlencoded({ extended: true }))

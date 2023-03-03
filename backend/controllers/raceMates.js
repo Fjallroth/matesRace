@@ -3,8 +3,33 @@ const User = require('../models/User')
 require('dotenv').config({path: './config/.env'})
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID 
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET 
-const callbackURL = 'http://127.0.0.1:2121/todos/StravaCallback'//change this
+const callbackURL = 'http://127.0.0.1:2121/raceMates/stravaCallback'//change this
 
+async function getUserData(userid, userStravaToken){
+    await fetch(`http://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaToken}&grant_type=authorization_code`, {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    })
+    .then(res => res.json())
+    .then(data =>{updateUserWithData(data, userid)})
+    }
+async function updateUserWithData(data, userid){
+        await User.findOneAndUpdate({_id:userid}, {
+        userStravaAccount: data.athlete.id, 
+        userStravaAccess: data.access_token, 
+        userStravaFirstName: data.athlete.firstname,
+        userStravaLastName: data.athlete.lastname,
+        userStravaRefresh: data.refresh_token,
+        userStravaPic: data.athlete.profile,
+        usertokenExpire: data.expires_at,
+        userSex: data.athlete.sex
+      },{
+        new: true})
+         
+    }
 // async function getActivitySegments(data, userid){
 //     //const userid = req.user.id
 //     const activityID = //get activity ID
@@ -73,7 +98,6 @@ module.exports = {
     joinRace: async (req, res)=>{
         try{
             const races = await Races.findOne({"_id": req.body.raceID, "partPass": req.body.racePassword})
-            console.log(races.participants) 
             let getSegmentObj = function(segmentArray) {
                 let segmentObjs = []
                 for(let i=0; i<segmentArray.length ; i++){
@@ -82,11 +106,18 @@ module.exports = {
                 }
                 return segmentObjs
             }
+            if(races.participants.find(o => o.user == req.user.id)){
+                console.log("already participating")
+                res.json({ message: 'User is already participating' })    
+            }
+            else{
             const newPart = {"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(races.segments)}
             await Races.findOneAndUpdate({"_id": req.body.raceID, "partPass": req.body.racePassword},
                         { $push: { participants: newPart }}
                      )
-            res.json({races})       
+            console.log("adding user to race")
+            res.json({races})   
+        }    
         }catch(err){
             console.log(err)
             res.status(500).json({ message: 'Server Error' });
@@ -103,11 +134,17 @@ module.exports = {
         // }
     },
     selectRide: async (req, res) =>{
-        const userid = req.user.id //how to get userid from react? add start time and end time to fetch
-    await fetch(`https://www.strava.com/api/v3/athlete/activities?access_token=${req.user.userStravaAccess}`)
+        const userid = req.user.id 
+        if(req.user.userStravaAccess !== undefined){
+            console.log("finding rides")
+            await fetch(`https://www.strava.com/api/v3/athlete/activities?access_token=${req.user.userStravaAccess}`)
     .then(res => res.json())
-    .then(data=> listActivities(data, userid) )
-    res.json({ data })
+    .then(data=> console.log(data))}
+    
+    else{
+        console.log("linkStrava")
+        res.redirect('linkStrava')
+    }
     },
     submitRide: async (req, res)=>{
         try{
@@ -123,19 +160,18 @@ module.exports = {
     },
     linkStrava: (req, res, next) => {
         if (req.user) {
-            console.log(req.session)
+            console.log(req.user)
             const state = req.sessionID;
-            return res.redirect(`http://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=activity:read_all&state=${state}`)
+            return res.redirect(`http://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=activity:read_all&state=${req.user.id}`)
             }
-            console.log(req.sessionID)
-          res.redirect('/todos')
+          res.redirect('/raceMates')
         },
       stravaCallback: async (req, res, next) => {
-        console.log(req.sessionID)
+        console.log(req.query.state)
         try{
             console.log(req.query.code)
             console.log(req.session)
-            await User.findOneAndUpdate({_id:req.user.id},{
+            await User.findOneAndUpdate({_id:req.query.state},{
                 userStravaToken: req.query.code
             })
         }
@@ -144,8 +180,8 @@ module.exports = {
             res.sendStatus(500);
             return;
         } 
-        const userid = req.user.id
+        const userid = req.query.state
         const userStravaToken = req.query.code
         getUserData(userid, userStravaToken)
-        res.redirect('/todos') //change
+        res.redirect('/raceMates') //change
     }}       

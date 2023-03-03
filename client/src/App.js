@@ -50,12 +50,18 @@ const addRace= async (race) =>{
     },
     body: JSON.stringify(race)
   })
-  //make DB find one and update to add user to race participant array
+  //handle error message when user is already taking part
 }
 const fetchRide=async (race) =>{
   console.log("fetch rides from strava")
-  //make strava request here
-  //
+  const res = await fetch('http://localhost:2121/raceMates/selectRide', {
+    method: 'GET',
+    mode: 'no-cors',
+    credentials: 'include',
+  })
+   // const data = await res.json()
+   // return data
+
 }
 const addTask= async (race) => {
   

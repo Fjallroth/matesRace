@@ -13,13 +13,13 @@ router.post('/planRace', raceController.planRace) // add ensure Auth
 
 router.put('/joinRace', raceController.joinRace) // add ensure Auth
 
-router.get('/selectRide', ensureAuth, raceController.selectRide)
+router.get('/selectRide',  raceController.selectRide)
 
-router.put('/submitRide', ensureAuth, raceController.submitRide)
+router.put('/submitRide',  raceController.submitRide)
 
-router.get('/linkStrava', ensureAuth, raceController.linkStrava)
+router.get('/linkStrava',  raceController.linkStrava)
 
-router.get('/StravaCallback', ensureAuth, raceController.stravaCallback)
+router.get('/stravaCallback',  raceController.stravaCallback)
 
 //delete ride? 
 
