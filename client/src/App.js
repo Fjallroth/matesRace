@@ -53,14 +53,19 @@ const addRace= async (race) =>{
   //handle error message when user is already taking part
 }
 const fetchRide=async (race) =>{
+  try{
   console.log("fetch rides from strava")
   const res = await fetch('http://localhost:2121/raceMates/selectRide', {
     method: 'GET',
     mode: 'no-cors',
     credentials: 'include',
   })
-   // const data = await res.json()
-   // return data
+  if (res.redirected) {
+    window.location.href = res.url;
+  }}
+  catch(err){
+    console.log(err)
+  }
 
 }
 const addTask= async (race) => {

@@ -139,10 +139,9 @@ module.exports = {
             console.log("finding rides")
             await fetch(`https://www.strava.com/api/v3/athlete/activities?access_token=${req.user.userStravaAccess}`)
     .then(res => res.json())
-    .then(data=> console.log(data))}
-    
+    .then(data=> data.message == 'Authorization Error' ? res.redirect('/raceMates/linkStrava'): console.log(data))
+    } 
     else{
-        console.log("linkStrava")
         res.redirect('linkStrava')
     }
     },
@@ -161,10 +160,14 @@ module.exports = {
     linkStrava: (req, res, next) => {
         if (req.user) {
             console.log(req.user)
-            const state = req.sessionID;
-            return res.redirect(`http://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=activity:read_all&state=${req.user.id}`)
+            console.log("linkStrava")
+            const url =(`https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=activity:read_all&state=${req.user.id}`)
+            console.log(url)
+            return res.redirect(301, url)
             }
           res.redirect('/raceMates')
+
+          
         },
       stravaCallback: async (req, res, next) => {
         console.log(req.query.state)
