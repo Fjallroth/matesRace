@@ -1,3 +1,4 @@
+const axios = require('axios')
 const Races = require('../models/Race')
 const User = require('../models/User')
 require('dotenv').config({path: './config/.env'})
@@ -133,18 +134,28 @@ module.exports = {
         //     res.status(500).json({ message: 'Server Error' });
         // }
     },
-    selectRide: async (req, res) =>{
-        const userid = req.user.id 
-        if(req.user.userStravaAccess !== undefined){
-            console.log("finding rides")
-            await fetch(`https://www.strava.com/api/v3/athlete/activities?access_token=${req.user.userStravaAccess}`)
-    .then(res => res.json())
-    .then(data=> data.message == 'Authorization Error' ? res.redirect('/raceMates/linkStrava'): console.log(data))
-    } 
-    else{
-        res.redirect('linkStrava')
-    }
-    },
+    selectRide: async (req, res) => {
+        console.log(req.body)
+        console.log(req.body.startDate)
+        const userid = req.user.id;
+        try {
+          const response = await axios.get(`https://www.strava.com/api/v3/athlete/activities?after=${req.body.startDate}&access_token=${req.user.userStravaAccess}`);
+          const rides = response.data;
+          res.json({"rides": rides});
+        } catch(err) {
+          console.log(err);
+          res.status(500).json({ message: 'Server Error' });
+        }
+      },
+    //     if(req.user.userStravaAccess !== undefined){
+    //         console.log((`https://www.strava.com/api/v3/athlete/activities?after=1675267823&access_token=${req.user.userStravaAccess}`))
+    //         const res = await fetch(`https://www.strava.com/api/v3/athlete/activities?after=1675267823&access_token=${req.user.userStravaAccess}`) 
+    //         const data = await res.json() //pass in the race start datetime
+    // } 
+    // else{
+    //     res.redirect('linkStrava')
+    // }
+    
     submitRide: async (req, res)=>{
         try{
             //get segments from ride
@@ -165,7 +176,7 @@ module.exports = {
             console.log(url)
             return res.redirect(301, url)
             }
-          res.redirect('/raceMates')
+          //res.redirect('/raceMates')
 
           
         },

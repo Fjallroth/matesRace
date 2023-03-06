@@ -52,22 +52,35 @@ const addRace= async (race) =>{
   })
   //handle error message when user is already taking part
 }
-const fetchRide=async (race) =>{
-  try{
-  console.log("fetch rides from strava")
-  const res = await fetch('http://localhost:2121/raceMates/selectRide', {
-    method: 'GET',
-    mode: 'no-cors',
-    credentials: 'include',
-  })
-  if (res.redirected) {
-    window.location.href = res.url;
-  }}
-  catch(err){
-    console.log(err)
-  }
+const fetchRide = async (race) =>{
+  console.log(race);
+  const res= await fetch('http://localhost:2121/raceMates/selectRide', {
+    method: 'POST',
+    headers:{
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(race)
+  });
+  const data = await res.json();
+  console.log(data);
+  // return data;
+};
+  //try{
+  // console.log("fetch rides from strava")
+  // const res = await fetch('http://localhost:2121/raceMates/linkStrava', {
+  //   method: 'GET',
+  //   mode: 'no-cors',
+  //   credentials: 'include'
+  // })
+  // if (res.redirected) {
+  //   console.log(res.url)
+  //   window.location.href = res.url
+  // }}
+  // catch(err){
+  //   console.log(err)
+  // }
 
-}
+
 const addTask= async (race) => {
   
   const res = await fetch(`http://localhost:5000/races/`, {
@@ -120,7 +133,7 @@ const toggleReminder = async (id) =>{
       {races.length > 0 ? 
       <Tasks races={races} onDelete={deleteTask} 
       onToggle={toggleReminder}
-      fetchRide= {()=> fetchRide()}
+      fetchRide={fetchRide}
       /> 
       : "You have no upcoming races"}
       </div>

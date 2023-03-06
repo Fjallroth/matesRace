@@ -13,9 +13,9 @@ const Race = ({ race, onDelete, onToggle, fetchRide }) => {
         />
       </h3>
       <p>{race.segments.join(', ')}</p>
-      <Button color="green" text="Upload ride" onClick={fetchRide} />
+      <Button color="green" text="Upload ride" onClick={() => {
+        fetchRide(race)}}/>
     </div>
   );
 };
-
 export default Race
