@@ -135,13 +135,33 @@ module.exports = {
         // }
     },
     selectRide: async (req, res) => {
-        console.log(req.body)
-        console.log(req.body.startDate)
-        const userid = req.user.id;
         try {
-          const response = await axios.get(`https://www.strava.com/api/v3/athlete/activities?after=${req.body.startDate}&access_token=${req.user.userStravaAccess}`);
+          const raceSegments = req.body.segments.map(e => parseInt(e))
+          const response = await axios.get(`https://www.strava.com/api/v3/athlete/activities?after=${req.body.startDate}&before=${req.body.endDate}&access_token=${req.user.userStravaAccess}`);
           const rides = response.data;
-          res.json({"rides": rides});
+          const rideid = rides.map(e => (e.id))
+          async function ridesegs(rideid){
+            const rideResponse = await axios.get(`https://www.strava.com/api/v3/activities/${rideid}?access_token=${req.user.userStravaAccess}`)
+            const ride = rideResponse.data;
+            const matchingSegments = rideResponse.data.segment_efforts.map(e => (raceSegments.includes(e.segment.id))? {"id": e.segment.id, "name": e.name, "segmentTime": e.elapsed_time} : undefined).filter(e => e !== undefined)
+            if(matchingSegments.length >= raceSegments.length){
+            return {
+              name: ride.name,
+              id: ride.id,
+              matchingSegments: matchingSegments,
+              segment_efforts: ride.segment_efforts,
+              type: ride.type
+            }
+          }
+          else{
+            return false
+          }
+        }
+        const promises = rideid.map(e => ridesegs(e))
+        const results = await Promise.all(promises)
+        const fullRideDetails = results.map(result => result !== false ? result: ("this ride does not have all of the segments"))
+          console.log(fullRideDetails)
+          res.json({"rides": fullRideDetails});
         } catch(err) {
           console.log(err);
           res.status(500).json({ message: 'Server Error' });
