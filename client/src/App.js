@@ -11,6 +11,7 @@ const App = () =>{
   const[showPlanRace, setshowPlanRace] = useState(false)
   const[showaddRace, setshowaddRace] = useState(false)
   const [rides, setRides] = useState([]);
+  const [raceID, setRaceID] = useState([]);
   const [races, setTasks] = useState([]);
   useEffect(()=> {
     const getRaces = async () => {
@@ -57,6 +58,7 @@ const addRace= async (race) =>{
 }
 const fetchRide = async (race) =>{
   console.log(race);
+  console.log(race._id)
   const res= await fetch('http://localhost:2121/raceMates/selectRide', {
     method: 'POST',
     headers:{
@@ -68,6 +70,7 @@ const fetchRide = async (race) =>{
   const displayData = data.rides.map(e => ({name: e.name, segments: e.matchingSegments}))
   console.log(displayData)
   setRides(displayData)
+  setRaceID(race._id)
   //const rideDetailsElement = document.getElementById('ride-details')
   //rideDetailsElement.innerHTML = JSON.stringify(displayData)
   // return data;
@@ -138,7 +141,7 @@ const toggleReminder = async (id) =>{
       onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
       {showaddRace && <AddRace onAdd={addRace}/>}
       {races.length > 0 ? 
-      <Tasks races={races} rides={rides} onDelete={deleteTask} 
+      <Tasks races={races} rides={rides} raceID={raceID} onDelete={deleteTask} 
       onToggle={toggleReminder}
       fetchRide={fetchRide}
 

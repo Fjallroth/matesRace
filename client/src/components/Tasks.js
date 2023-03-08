@@ -1,15 +1,16 @@
 //rafce
 import Race from "./Task"
-const Tasks = ({races, rides, onDelete, onToggle, fetchRide}) => {
+const Tasks = ({races, rides, raceID, onDelete, onToggle, fetchRide}) => {
   
   return (
     <>
-   
+      
        {races.map((race) => (
         <Race
           key={race._id}
           race={race}
           rides={rides}
+          raceID={raceID}
           raceName={race.raceName}
           startDay={race.startDate}
           endDay={race.endDate}
@@ -18,7 +19,9 @@ const Tasks = ({races, rides, onDelete, onToggle, fetchRide}) => {
           onDelete={onDelete}
           onToggle={onToggle}
           fetchRide={fetchRide}
-        />))} 
+        />))
+        } 
+        
     </>
   )
 }
