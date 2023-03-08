@@ -6,10 +6,12 @@ import PlanRace from "./components/PlanRace";
 import AddRace from "./components/AddRace";
 import PrevRaceContainer from "./components/PrevRaceContainer";
 
+
 const App = () =>{
   const[showPlanRace, setshowPlanRace] = useState(false)
   const[showaddRace, setshowaddRace] = useState(false)
-  const [races, setTasks] = useState([])
+  const [rides, setRides] = useState([]);
+  const [races, setTasks] = useState([]);
   useEffect(()=> {
     const getRaces = async () => {
     const racesFromServer = await fetchRace()
@@ -18,6 +20,7 @@ const App = () =>{
     }
     getRaces()
   }, [])
+
  //change this function to get DB race objects
   const fetchRace = async () =>{
     const res = await fetch('http://localhost:2121/raceMates/races')
@@ -62,7 +65,11 @@ const fetchRide = async (race) =>{
     body: JSON.stringify(race)
   });
   const data = await res.json();
-  console.log(data);
+  const displayData = data.rides.map(e => ({name: e.name, segments: e.matchingSegments}))
+  console.log(displayData)
+  setRides(displayData)
+  //const rideDetailsElement = document.getElementById('ride-details')
+  //rideDetailsElement.innerHTML = JSON.stringify(displayData)
   // return data;
 };
   //try{
@@ -131,11 +138,13 @@ const toggleReminder = async (id) =>{
       onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
       {showaddRace && <AddRace onAdd={addRace}/>}
       {races.length > 0 ? 
-      <Tasks races={races} onDelete={deleteTask} 
+      <Tasks races={races} rides={rides} onDelete={deleteTask} 
       onToggle={toggleReminder}
       fetchRide={fetchRide}
+
       /> 
       : "You have no upcoming races"}
+      <div id="ride-details"></div>
       </div>
       <div className="container">
       <PrevRaceContainer title={"Your previous races"}/>
