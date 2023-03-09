@@ -1,6 +1,22 @@
 import React from 'react'
 import Button from './Button'
 
+function toHoursAndMinutes(totalSeconds) {
+  const totalMinutes = Math.floor(totalSeconds / 60);
+
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if(hours == 0 && minutes == 0){
+    return `${seconds}s`;
+  }
+  else if(hours == 0 ){
+    return `${minutes}m${seconds}s`;
+  }
+  else{
+  return `${hours}hr${minutes}m${seconds}s`;
+}
+}
 const RideList = ({rides}) => {
   return (
     <div>
@@ -15,8 +31,7 @@ const RideList = ({rides}) => {
           {ride.segments.map( segment =>
           <tr>
               <td>{segment.name}</td>
-              <td>{segment.segmentTime}</td>
-            
+              <td>{toHoursAndMinutes(segment.segmentTime)}</td>
           </tr>
             )}
           </table>
