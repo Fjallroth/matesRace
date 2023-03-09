@@ -7,8 +7,19 @@ const RideList = ({rides}) => {
       {rides.map((ride) => (
         <div key={Math.floor(Math.random()* 100000)}>
           <h2>{ride.name}</h2>
-          <p>{ride.segments.name}</p>
-          <p>{ride.segments.segmentTime}</p>
+          <table>
+            <tr>
+              <th>Segment</th>
+              <th>Segment time</th>
+            </tr>
+          {ride.segments.map( segment =>
+          <tr>
+              <td>{segment.name}</td>
+              <td>{segment.segmentTime}</td>
+            
+          </tr>
+            )}
+          </table>
           <Button color="green" text="Select this ride"/>
         </div>
       ))}
