@@ -177,16 +177,18 @@ module.exports = {
     // }
     
     submitRide: async (req, res)=>{
-        try{
-            //get segments from ride
-            await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to send data to
-                raceEntries: "xyz" //add user results to participant list
-            })
-            res.json('Results submitted')
-        }catch(err){
-            console.log(err)
-            res.status(500).json({ message: 'Server Error' });
-        }
+        console.log(req.body)
+        
+        // try{
+        //     //get segments from ride
+        //    // await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to send data to
+        //     //    raceEntries: "xyz" //add user results to participant list
+        //     })
+        //     res.json('Results submitted')
+        // }catch(err){
+        //     console.log(err)
+        //     res.status(500).json({ message: 'Server Error' });
+        // }
     },
     linkStrava: (req, res, next) => {
         if (req.user) {

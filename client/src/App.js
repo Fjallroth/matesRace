@@ -42,8 +42,7 @@ const planRace= async (race) =>{
     },
     body: JSON.stringify(race)
   })
-
-  //make post request here
+  fetchRace()
 }
 const addRace= async (race) =>{
   console.log(race)
@@ -54,6 +53,7 @@ const addRace= async (race) =>{
     },
     body: JSON.stringify(race)
   })
+  fetchRace()
   //handle error message when user is already taking part
 }
 const fetchRide = async (race) =>{
@@ -71,9 +71,16 @@ const fetchRide = async (race) =>{
   console.log(displayData)
   setRides(displayData)
   setRaceID(race._id)
-  //const rideDetailsElement = document.getElementById('ride-details')
-  //rideDetailsElement.innerHTML = JSON.stringify(displayData)
-  // return data;
+};
+const selectRide = async (ride) =>{
+  console.log(ride);
+  const res= await fetch('http://localhost:2121/raceMates/submitRide', {
+    method: 'PUT',
+    headers:{
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(ride)
+  })
 };
   //try{
   // console.log("fetch rides from strava")
@@ -144,6 +151,7 @@ const toggleReminder = async (id) =>{
       <Tasks races={races} rides={rides} raceID={raceID} onDelete={deleteTask} 
       onToggle={toggleReminder}
       fetchRide={fetchRide}
+      selectRide={selectRide}
 
       /> 
       : "You have no upcoming races"}

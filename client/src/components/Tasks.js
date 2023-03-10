@@ -1,6 +1,6 @@
 //rafce
 import Race from "./Task"
-const Tasks = ({races, rides, raceID, onDelete, onToggle, fetchRide}) => {
+const Tasks = ({races, rides, raceID, onDelete, onToggle, fetchRide,selectRide}) => {
   
   return (
     <>
@@ -19,6 +19,7 @@ const Tasks = ({races, rides, raceID, onDelete, onToggle, fetchRide}) => {
           onDelete={onDelete}
           onToggle={onToggle}
           fetchRide={fetchRide}
+          selectRide={selectRide}
         />))
         } 
         

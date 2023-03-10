@@ -17,7 +17,7 @@ function toHoursAndMinutes(totalSeconds) {
   return `${hours}hr${minutes}m${seconds}s`;
 }
 }
-const RideList = ({rides}) => {
+const RideList = ({rides, selectRide}) => {
   return (
     <div>
       {rides.map((ride) => (
@@ -35,7 +35,9 @@ const RideList = ({rides}) => {
           </tr>
             )}
           </table>
-          <Button color="green" text="Select this ride"/>
+          <Button color="green" onClick={() => {
+            selectRide(ride)}} 
+        text="Select this ride"/>
         </div>
       ))}
     </div>
