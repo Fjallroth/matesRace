@@ -177,18 +177,21 @@ module.exports = {
     // }
     
     submitRide: async (req, res)=>{
-        console.log(req.body)
-        
-        // try{
-        //     //get segments from ride
-        //    // await Races.findOneAndUpdate({_id:req.body},{ //find the race the user wants to send data to
-        //     //    raceEntries: "xyz" //add user results to participant list
-        //     })
-        //     res.json('Results submitted')
-        // }catch(err){
-        //     console.log(err)
-        //     res.status(500).json({ message: 'Server Error' });
-        // }
+        const user = req.user.id
+
+        try{
+            //get segments from ride
+            await Races.findOneAndUpdate(
+                 {_id:req.body.raceId, "participants.user": user},
+                 { $set: { "participants.$[elem].segments": req.body.segments } },
+                 { arrayFilters: [ { "elem.user": user } ], new: true }
+            )
+            console.log("ride selected")
+            res.json({"updated": true})
+        }catch(err){
+            console.log(err)
+            res.status(500).json({ message: 'Server Error' });
+        }
     },
     linkStrava: (req, res, next) => {
         if (req.user) {

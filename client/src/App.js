@@ -67,7 +67,7 @@ const fetchRide = async (race) =>{
     body: JSON.stringify(race)
   });
   const data = await res.json();
-  const displayData = data.rides.map(e => ({name: e.name, segments: e.matchingSegments}))
+  const displayData = data.rides.map(e => ({name: e.name, segments: e.matchingSegments, raceId:race._id}))
   console.log(displayData)
   setRides(displayData)
   setRaceID(race._id)
