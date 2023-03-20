@@ -112,7 +112,7 @@ module.exports = {
                 res.json({ message: 'User is already participating' })    
             }
             else{
-            const newPart = {"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(races.segments)}
+            const newPart = {"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(races.segments), "submittedRide": false}
             await Races.findOneAndUpdate({"_id": req.body.raceID, "partPass": req.body.racePassword},
                         { $push: { participants: newPart }}
                      )
@@ -183,7 +183,8 @@ module.exports = {
             //get segments from ride
             await Races.findOneAndUpdate(
                  {_id:req.body.raceId, "participants.user": user},
-                 { $set: { "participants.$[elem].segments": req.body.segments } },
+                 { $set: { "participants.$[elem].segments": req.body.segments,
+                 "participants.$[elem].submittedRide": true } },
                  { arrayFilters: [ { "elem.user": user } ], new: true }
             )
             console.log("ride selected")
