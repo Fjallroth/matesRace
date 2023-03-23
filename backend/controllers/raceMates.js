@@ -60,7 +60,7 @@ module.exports = {
         try{
             const races = await Races.find({"participants.user": req.user.id})
             console.log({"races": races })  
-            res.json({"races": races })       
+            res.json({"races": races , "user": req.user.id})       
         }catch(err){
             console.log(err)
             res.status(500).json({ message: 'Server Error' });
@@ -87,7 +87,7 @@ module.exports = {
                             segments: segmentArray,
                             raceInfo: req.body.raceInfo,
                             partPass: req.body.partPass,
-                            participants: [{"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(segmentArray)}]
+                            participants: [{"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(segmentArray), "submittedRide": false}]
                         }) 
              console.log('Race has been added!')
              res.redirect('/raceMates')

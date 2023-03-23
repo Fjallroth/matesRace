@@ -13,14 +13,16 @@ const App = () =>{
   const [rides, setRides] = useState([]);
   const [raceID, setRaceID] = useState([]);
   const [races, setTasks] = useState([]);
+  const [userId, setUserId] = useState('');
   useEffect(()=> {
     const getRaces = async () => {
     const racesFromServer = await fetchRace()
     console.log(racesFromServer)
     setTasks(racesFromServer.races)
+    setUserId(racesFromServer.user)
     }
     getRaces()
-  }, [])
+  }, [races])
 
  //change this function to get DB race objects
   const fetchRace = async () =>{
@@ -152,7 +154,7 @@ const toggleReminder = async (id) =>{
       onToggle={toggleReminder}
       fetchRide={fetchRide}
       selectRide={selectRide}
-
+      userId={userId}
       /> 
       : "You have no upcoming races"}
       <div id="ride-details"></div>

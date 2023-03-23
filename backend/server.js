@@ -34,16 +34,18 @@ app.use(express.json())
 app.use(logger('dev'))
 // Sessions
 app.use(
-    session({
-      secret: 'keyboard cat',
-      cookie: { maxAge: 60000*60*8,
-                sameSite: 'Strict'
-      },
-      resave: true,
-      saveUninitialized: false,
-      store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    })
-  )
+  session({
+    secret: 'keyboard cat',
+    cookie: {
+      maxAge: 60000 * 60 * 8,
+      sameSite: 'Strict',
+      secure: process.env.NODE_ENV === 'production' ? true : false, 
+    },
+    resave: false, // Set this to false
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+)
   
 // Passport middleware
 app.use(passport.initialize())
