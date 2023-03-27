@@ -90,7 +90,7 @@ module.exports = {
                             participants: [{"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(segmentArray), "submittedRide": false}]
                         }) 
              console.log('Race has been added!')
-             res.redirect('/raceMates')
+             res.json("Race Created!") 
          }catch(err){
              console.log(err)
              res.status(500).json({ message: 'Server Error' });

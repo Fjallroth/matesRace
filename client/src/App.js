@@ -22,9 +22,62 @@ const App = () =>{
     setUserId(racesFromServer.user)
     }
     getRaces()
-  }, [races])
+  }, [])
 
- //change this function to get DB race objects
+  const updateRaces = async () => {
+    const racesFromServer = await fetchRace();
+    setTasks(racesFromServer.races);
+    setUserId(racesFromServer.user);
+  };
+
+  const getLeaderboard = (race) => {
+    if (!race || !race.participants || !race.segments) {
+      return []; // Return an empty array if the race object is undefined or doesn't have the required properties
+    }
+    const participants = race.participants;
+  
+    // Build an array of segment names
+    const segmentNames = race.segments.map(segment => ({
+      name: segment
+    }));
+  
+    // Add each participant's segment times to the array of segment names
+    participants.forEach(participant => {
+      participant.segments.forEach((segment, index) => {
+        const segmentName = segmentNames[index].name;
+        segmentNames[index][participant.userName] = segment.segmentTime;
+      });
+    });
+  
+    // Calculate each participant's total time and seconds off leader
+    const leaderboard = participants.map(participant => {
+      const totalTime = participant.segments.reduce((acc, segment) => {
+        return acc + segment.segmentTime;
+      }, 0);
+      const secondsOffLeader = totalTime - participants[0].segments.reduce((acc, segment) => {
+        return acc + segment.segmentTime;
+      }, 0);
+      return {
+        name: participant.userName,
+        totalTime: totalTime,
+        diffToLeader: secondsOffLeader,
+        segments: segmentNames.map((segmentName) => {
+          return {
+            name: segmentName.name,
+            time: segmentName[participant.userName],
+          }
+        })
+      };
+    });
+  
+    // Sort the leaderboard by total time
+    leaderboard.sort((a, b) => {
+      return a.totalTime - b.totalTime;
+    });
+  
+    return leaderboard;
+  };
+
   const fetchRace = async () =>{
     const res = await fetch('http://localhost:2121/raceMates/races')
     const data = await res.json()
@@ -44,7 +97,8 @@ const planRace= async (race) =>{
     },
     body: JSON.stringify(race)
   })
-  fetchRace()
+  await res.json();
+  await updateRaces();
 }
 const addRace= async (race) =>{
   console.log(race)
@@ -55,8 +109,8 @@ const addRace= async (race) =>{
     },
     body: JSON.stringify(race)
   })
-  fetchRace()
-  //handle error message when user is already taking part
+  await res.json();
+  await updateRaces();
 }
 const fetchRide = async (race) =>{
   console.log(race);
@@ -84,20 +138,6 @@ const selectRide = async (ride) =>{
     body: JSON.stringify(ride)
   })
 };
-  //try{
-  // console.log("fetch rides from strava")
-  // const res = await fetch('http://localhost:2121/raceMates/linkStrava', {
-  //   method: 'GET',
-  //   mode: 'no-cors',
-  //   credentials: 'include'
-  // })
-  // if (res.redirected) {
-  //   console.log(res.url)
-  //   window.location.href = res.url
-  // }}
-  // catch(err){
-  //   console.log(err)
-  // }
 
 
 const addTask= async (race) => {
@@ -154,6 +194,7 @@ const toggleReminder = async (id) =>{
       onToggle={toggleReminder}
       fetchRide={fetchRide}
       selectRide={selectRide}
+      getLeaderboard={(race) => getLeaderboard(race)}
       userId={userId}
       /> 
       : "You have no upcoming races"}
@@ -162,7 +203,9 @@ const toggleReminder = async (id) =>{
       <div className="container">
       <PrevRaceContainer title={"Your previous races"}/>
       {races.length > 0 ? 
-      <Tasks races={races} onDelete={deleteTask} 
+      <Tasks races={races} 
+      getLeaderboard={(race) => getLeaderboard(race)}
+      onDelete={deleteTask} 
       onToggle={toggleReminder} 
       /> 
       : "You haven't done any races"}
