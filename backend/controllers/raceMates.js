@@ -1,22 +1,56 @@
 const axios = require('axios')
 const Races = require('../models/Race')
 const User = require('../models/User')
+const moment = require('moment');
+const qs = require('qs');
+const { base } = require('../models/Race');
 require('dotenv').config({path: './config/.env'})
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID 
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET 
-const callbackURL = 'http://127.0.0.1:2121/raceMates/stravaCallback'//change this
+const callbackURL = 'http://127.0.0.1:2121/raceMates/stravaCallback'
 
-async function getUserData(userid, userStravaToken){
-    await fetch(`http://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaToken}&grant_type=authorization_code`, {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+async function getUserRefresh(userid, userStravaToken, userTokenExpire) {
+    const now = moment().unix();
+    if (now < userTokenExpire) {
+      // Access token is still valid
+      return;
     }
+    // Access token has expired, refresh it
+    const response = await axios.post(`https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaRefresh}&grant_type=refresh_token`, qs.stringify({
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+    
+    const data = response.data;
+    await updateUserWithData(data, userid);
+}
+
+// async function getUserRefreshWithRefreshToken(userid, userStravaRefresh){
+//     await fetch(`https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaRefresh}&grant_type=refresh_token`, {
+//       method: 'POST',
+//       headers: {
+//           'Accept': 'application/json',
+//           'Content-Type': 'application/json'
+//       }
+//     })
+//     .then(res => res.json())
+//     .then(data =>{updateUserWithData(data, userid)})
+// }
+
+async function getUserData(userid, userStravaToken, userTokenExpire){
+    await fetch(`http://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaToken}&grant_type=authorization_code`, {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      }
     })
     .then(res => res.json())
     .then(data =>{updateUserWithData(data, userid)})
-    }
+}
+
 async function updateUserWithData(data, userid){
         await User.findOneAndUpdate({_id:userid}, {
         userStravaAccount: data.athlete.id, 
@@ -31,71 +65,69 @@ async function updateUserWithData(data, userid){
         new: true})
          
     }
-// async function getActivitySegments(data, userid){
-//     //const userid = req.user.id
-//     const activityID = //get activity ID
-//     fetch(`https://www.strava.com/api/v3/activities/${activityID}?access_token=${req.user.userStravaAccess}`)
-//     .then(res => res.json())
-//     .then(data=> getEfforts(data, userid) ) }
-
-    //this needs work
-// async function getEfforts(data, userid){
-//     const efforts = data.segment_efforts
-//     if(typeof efforts !== "undefined"){
-//         for(let i=0; i < efforts.length ; i++){ 
-//             //change to update
-//           await Race.create({
-//               segmentId: efforts[i].segment.id, 
-//               segmentName: efforts[i].segment.name, 
-//               segmentTime: efforts[i].elapsed_time, 
-//               completed: false, 
-//               userId: userid})
-
-//              console.log("effort added")
-//           }}}
 
 module.exports = {
-    getRaces: async (req,res)=>{
-        console.log(req.user)
-        try{
-            const races = await Races.find({"participants.user": req.user.id})
-            console.log({"races": races })  
-            res.json({"races": races , "user": req.user.id})       
-        }catch(err){
-            console.log(err)
-            res.status(500).json({ message: 'Server Error' });
+    getRaces: async (req, res) => {
+        const now = moment().unix();
+        const { userStravaRefresh, userTokenExpire } = req.user;
+        if (now >= userTokenExpire) {
+          await getUserRefresh(req.user.id, userStravaRefresh);
         }
-    },
-     planRace: async (req, res)=>{
-        console.log(req.body)
-        console.log(req.user._id)
-         try{
-            let segmentArray = req.body.segments.split(',')
-            let getSegmentObj = function(segmentArray) {
-                let segmentObjs = []
-                for(let i=0; i<segmentArray.length ; i++){
-                    let segObj = {"segment": segmentArray[i], "segmentTime": ""}
-                    segmentObjs.push(segObj)
+        console.log(req.user);
+        try {
+          const races = await Races.find({ "participants.user": req.user.id });
+          console.log({ races });
+          res.json({ races });
+        } catch (err) {
+          console.log(err);
+          res.status(500).json({ message: 'Server Error' });
+        }
+      },
+      planRace: async (req, res)=>{
+        console.log(req.body);
+        console.log(req.user._id);
+        if(!req.user.userStravaAccess){
+            alert("please link strava")
+            res.status(500).json({ message: 'Strava is not yet linked' })
+        }
+        try {
+          let segmentArray = req.body.segments.split(',');
+          let getSegmentObj = async function(segmentArray) {
+            let segmentObjs = [];
+            for (let i = 0; i < segmentArray.length; i++) {
+              const segmentId = segmentArray[i];
+              const response = await axios.get(`https://www.strava.com/api/v3/segments/${segmentId}`, {
+                headers: {
+                  'Authorization': `Bearer ${req.user.userStravaAccess}`
                 }
-                return segmentObjs
+              });
+              const segmentName = response.data.name;
+              let segObj = {"segment": segmentArray[i], "segmentName": segmentName, "segmentTime": ""};
+              segmentObjs.push(segObj);
             }
-            
-          await Races.create({organiserID: req.user.id, 
-                            raceName: req.body.raceName,
-                            startDate: Math.floor(new Date(req.body.startDay).getTime()/1000).toFixed(0),
-                            endDate: Math.floor((new Date(req.body.endDay).getTime()/1000).toFixed(0)),
-                            segments: segmentArray,
-                            raceInfo: req.body.raceInfo,
-                            partPass: req.body.partPass,
-                            participants: [{"user": req.user.id, "userName": req.user.userName, "segments": getSegmentObj(segmentArray), "submittedRide": false}]
-                        }) 
-             console.log('Race has been added!')
-             res.json("Race Created!") 
-         }catch(err){
-             console.log(err)
-             res.status(500).json({ message: 'Server Error' });
-         }
-    },
+            return segmentObjs;
+          };
+      
+          const segments = await getSegmentObj(segmentArray);
+      
+          await Races.create({
+            organiserID: req.user.id, 
+            raceName: req.body.raceName,
+            startDate: Math.floor(new Date(req.body.startDay).getTime()/1000).toFixed(0),
+            endDate: Math.floor((new Date(req.body.endDay).getTime()/1000).toFixed(0)),
+            segments: segmentArray,
+            raceInfo: req.body.raceInfo,
+            partPass: req.body.partPass,
+            participants: [{"user": req.user.id, "userName": req.user.userName, "segments": segments, "submittedRide": false}]
+          });
+      
+          console.log('Race has been added!');
+          res.json("Race Created!");
+        } catch(err) {
+          console.log(err);
+          res.status(500).json({ message: 'Server Error' });
+        }
+      },
     joinRace: async (req, res)=>{
         try{
             const races = await Races.findOne({"_id": req.body.raceID, "partPass": req.body.racePassword})
