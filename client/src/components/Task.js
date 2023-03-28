@@ -43,6 +43,7 @@ const Race = ({ race, rides, raceID, onDelete, getLeaderboard, fetchRide, select
             </a>
           ))}
       </p>
+
       {race.organiserID == userId ? (
         <h4>
           You are the race organiser, share these details with participants:
