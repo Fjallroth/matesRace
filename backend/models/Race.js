@@ -25,6 +25,12 @@ const RaceSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  joinRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
   participants: {
     type: Array,
     required: true

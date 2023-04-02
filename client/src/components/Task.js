@@ -3,6 +3,7 @@ import { FaTimes } from 'react-icons/fa';
 import Button from './Button';
 import RideList from './RideList';
 import {useState, useEffect} from 'react';
+import Leaderboard from './Leaderboard';
 
 const Race = ({ race, rides, raceID, onDelete, getLeaderboard, fetchRide, selectRide, userId }) => {
   const [sortKey, setSortKey] = useState('totalTime');
@@ -53,37 +54,12 @@ const Race = ({ race, rides, raceID, onDelete, getLeaderboard, fetchRide, select
       ) : (
         ''
       )}
-      <h2>Leaderboard:</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Name</th>
-          {race.participants.length > 0 &&
-            race.participants[0].segments.map((segment, index) => (
-              <th key={index} onClick={() => setSortKey(`segment-${index}`)}>
-                {segment.name}
-                </th>
-            ))}
-          <th onClick={() => setSortKey('totalTime')}>Total Time</th>
-          <th onClick={() => setSortKey('diffToLeader')}>Diff to Leader</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedLeaderboard.map((participant, index) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td></td>
-            <td>{participant.name}</td>
-            {participant.segments.map((segment, index) => (
-              <td key={index}>{segment.time}</td>
-            ))}
-            <td>{participant.totalTime}</td>
-            <td>{participant.diffToLeader}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+       <Leaderboard
+      race={race}
+      sortKey={sortKey}
+      setSortKey={setSortKey}
+      sortedLeaderboard={sortedLeaderboard}
+    />
       {isRideSubmitted ? (
         <Button
           color="blue"
