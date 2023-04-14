@@ -70,24 +70,58 @@ async function updateUserWithData(data, userid){
         new: true})
          
     }
+    const approveJoinRequest = async (raceId, userId) => {
+      const race = await Races.findById(raceId);
+      const userName = await User.findOne({ _id: userId});
+
+  // Remove the user from the joinRequests array
+  race.joinRequests = race.joinRequests.filter((request) => request.toString() !== userId);
+  // Add the user to the participants array
+
+  race.participants.push({ user: userId, userName: userName, submittedRide: false });
+  // Save the updated race
+  await race.save();
+    };
 
 module.exports = {
+  approveJoin: async(req, res) => {
+    try {
+      const race = await Races.findById(req.params.raceId);
+      const user = await User.findById(req.params.userId);
+  
+      if (!race || !user) {
+        return res.status(404).json({ message: 'Race or User not found' });
+      }
+  
+      await approveJoinRequest(req.params.raceId, req.params.userId);
+      res.status(200).json({ message: 'Join request approved.' });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  },
     getRaces: async (req, res) => {
-        const now = moment().unix();
-        const { userStravaRefresh, userTokenExpire } = req.user;
-        if (now >= userTokenExpire) {
-          await getUserRefresh(req.user.id, userStravaRefresh);
-        }
-        console.log(req.user);
-        try {
-          const races = await Races.find({ "participants.user": req.user.id });
-          console.log({ races });
-          res.json({ "races": races , "user": req.user.id });
-        } catch (err) {
-          console.log(err);
-          res.status(500).json({ message: 'Server Error' });
-        }
-      },
+      const now = moment().unix();
+      const { userStravaRefresh, userTokenExpire } = req.user;
+      if (now >= userTokenExpire) {
+        await getUserRefresh(req.user.id, userStravaRefresh);
+      }
+      console.log(req.user);
+      try {
+        const races = await Races.find({
+          $or: [
+            { 'participants.user': req.user.id },
+            { joinRequests: req.user.id },
+          ],
+        })
+        .populate('joinRequests') // Add this line to populate user information
+        .sort({ startDate: 1 });
+        console.log({ races });
+        res.json({ "races": races , "user": req.user.id });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Server Error' });
+      }
+    },
       planRace: async (req, res)=>{
         console.log(req.body);
         console.log(req.user._id);

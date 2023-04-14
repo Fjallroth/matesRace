@@ -43,20 +43,23 @@ const App = () =>{
   
     // Add each participant's segment times to the array of segment names
     participants.forEach(participant => {
+      if(participant.segments){
       participant.segments.forEach((segment, index) => {
         const segmentName = segmentNames[index].name;
         segmentNames[index][participant.userName] = segment.segmentTime;
-      });
+      })};
     });
   
     // Calculate each participant's total time and seconds off leader
     const leaderboard = participants.map(participant => {
-      const totalTime = participant.segments.reduce((acc, segment) => {
+      const totalTime = participant.segments ? participant.segments.reduce((acc, segment) => {
         return acc + segment.segmentTime;
-      }, 0);
-      const secondsOffLeader = totalTime - participants[0].segments.reduce((acc, segment) => {
+      }, 0) : 0;
+    
+      const secondsOffLeader = totalTime - (participants[0].segments ? participants[0].segments.reduce((acc, segment) => {
         return acc + segment.segmentTime;
-      }, 0);
+      }, 0) : 0);
+    
       return {
         name: participant.userName,
         totalTime: totalTime,
@@ -80,11 +83,6 @@ const App = () =>{
 
   const fetchRace = async () =>{
     const res = await fetch('http://localhost:2121/raceMates/races')
-    const data = await res.json()
-    return data
-  }
-  const fetchTasky = async (id) =>{
-    const res = await fetch(`http://localhost:5000/races/${id}`)
     const data = await res.json()
     return data
   }
@@ -140,44 +138,6 @@ const selectRide = async (ride) =>{
 };
 
 
-const addTask= async (race) => {
-  
-  const res = await fetch(`http://localhost:5000/races/`, {
-    method: 'POST',
-    headers:{
-      'Content-type': 'application/json'
-    },
-    body: JSON.stringify(race)
-  })
-  const data = await res.json()
-
-  setTasks([...races, data])
-}
-
-const deleteTask = async (id) => {
-  await fetch(`http://localhost:5000/races/${id}`, {
-    method: 'DELETE'
-  })
-  setTasks(races.filter((race) => race.id !==id))
-}
-
-const toggleReminder = async (id) =>{
-  const raceToToggle = await fetchTasky(id)
-  const updTask = {...raceToToggle, reminder: !raceToToggle,
-  reminder: !raceToToggle.reminder}
-  const res = await fetch(`http://localhost:5000/races/${id}`, {
-  method: 'PUT',
-  headers:{
-      'Content-type': 'application/json'
-    },
-    body: JSON.stringify(updTask)
-  })
-  const data = await res.json()
-
-  setTasks(races.map((race) => race? //something wrong here
-  {...race, reminder: data.reminder} : race))
-}
-
   return (
     <div>
     <div className="container">
@@ -190,8 +150,7 @@ const toggleReminder = async (id) =>{
       onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
       {showaddRace && <AddRace onAdd={addRace}/>}
       {races.length > 0 ? 
-      <Tasks races={races} rides={rides} raceID={raceID} onDelete={deleteTask} 
-      onToggle={toggleReminder}
+      <Tasks races={races} rides={rides} raceID={raceID} 
       fetchRide={fetchRide}
       selectRide={selectRide}
       getLeaderboard={(race) => getLeaderboard(race)}
@@ -205,8 +164,6 @@ const toggleReminder = async (id) =>{
       {races.length > 0 ? 
       <Tasks races={races} 
       getLeaderboard={(race) => getLeaderboard(race)}
-      onDelete={deleteTask} 
-      onToggle={toggleReminder} 
       /> 
       : "You haven't done any races"}
       </div>

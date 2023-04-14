@@ -23,7 +23,6 @@ const Leaderboard = ({ race, sortKey, setSortKey, sortedLeaderboard }) => {
           {sortedLeaderboard.map((participant, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td></td>
               <td>{participant.name}</td>
               {participant.segments.map((segment, index) => (
                 <td key={index}>{segment.time}</td>

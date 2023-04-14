@@ -11,7 +11,9 @@ router.get('/races', raceController.getRaces)
 
 router.post('/planRace', raceController.planRace) // add ensure Auth
 
-router.put('/joinRace', raceController.joinRace) // add ensure Auth
+router.put('/joinRace', raceController.joinRace) 
+
+router.put('/approveJoin/:raceId/:userId', raceController.approveJoin)
 
 router.post('/selectRide', raceController.selectRide)
 
