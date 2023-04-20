@@ -1,90 +1,17 @@
-@media only screen and (max-width: 600px) {
-  body {
-    font-size: 16px;
-  }
-  
-  .container {
-    padding: 10px;
-  }
-  
-  .race {
-    padding: 10px;
-    margin: 10px;
-  }
-  
-  .race h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .race p {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  .race h4 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .race ol {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  .race li {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .button {
-    font-size: 16px;
-    padding: 10px 20px;
-  }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* desktop styles */
-@media only screen and (min-width: 600px) {
-  body {
-    font-size: 18px;
-  }
-  
-  .container {
-    padding: 20px;
-  }
-  
-  .race {
-    padding: 20px;
-    margin: 20px;
-  }
-  
-  .race h3 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .race p {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .race h4 {
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .race ol {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  
-  .race li {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .button {
-    font-size: 18px;
-    padding: 15px 30px;
-  }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }

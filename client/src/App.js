@@ -139,28 +139,40 @@ const selectRide = async (ride) =>{
 
 
   return (
-    <div>
-    <div className="container">
-      <Header buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setshowPlanRace(!showPlanRace)} showAdd={showPlanRace}/>
+    <div className="flex flex-col w-full min-h-screen">
+    <div className="z-10 py-4 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 text-purple-600 dark:text-purple-300">
+      <Header class="flex align-end px-10" buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setshowPlanRace(!showPlanRace)} showAdd={showPlanRace}/>
       {showPlanRace && <PlanRace onAdd={planRace}/>}
       
       </div>
-      <div className="container">
-      <RaceContainer title={"Your upcoming races"} buttonTitle={"Join a race"} 
-      onAdd={() => setshowaddRace(!showaddRace)} showAdd={showaddRace}/>
-      {showaddRace && <AddRace onAdd={addRace}/>}
-      {races.length > 0 ? 
-      <Tasks races={races} rides={rides} raceID={raceID} 
-      fetchRide={fetchRide}
-      selectRide={selectRide}
-      getLeaderboard={(race) => getLeaderboard(race)}
-      userId={userId}
-      /> 
-      : "You have no upcoming races"}
+      <div className="z-5 py-10 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center h-full text-purple-600 dark:text-purple-300 my-8">
+      <RaceContainer
+        title={"Your upcoming races"}
+        buttonTitle={"Join a race"}
+        onAdd={() => setshowaddRace(!showaddRace)}
+        showAdd={showaddRace}
+      />
+      {showaddRace && <AddRace onAdd={addRace} />}
+      <div className="py-10 w-full">
+      {races.length > 0 ? (
+        <Tasks
+          races={races}
+          rides={rides}
+          raceID={raceID}
+          fetchRide={fetchRide}
+          selectRide={selectRide}
+          getLeaderboard={(race) => getLeaderboard(race)}
+          userId={userId}
+        />
+      ) : (
+        "You have no upcoming races"
+      )}
+      </div>
       <div id="ride-details"></div>
       </div>
-      <div className="container">
+      <div className="z-5 py-10 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center h-full text-purple-600 dark:text-purple-300 my-8">
       <PrevRaceContainer title={"Your previous races"}/>
+      <div className="py-10 w-full">
       {races.length > 0 ? 
       <Tasks races={races} 
       getLeaderboard={(race) => getLeaderboard(race)}
@@ -169,6 +181,7 @@ const selectRide = async (ride) =>{
       </div>
     
     </div>
+  </div>
   )
 }
 

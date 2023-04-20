@@ -1,16 +1,19 @@
 {
-  "name": "client",
+  "name": "-a",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "jquery": "^3.6.3",
+    "autoprefixer": "^10.4.14",
+    "color": "^4.2.3",
+    "font-awesome": "^4.7.0",
+    "postcss": "^8.4.22",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.7.1",
     "react-scripts": "5.0.1",
+    "tailwindcss": "^3.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -36,8 +39,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/jquery": "^3.5.16"
   }
 }
