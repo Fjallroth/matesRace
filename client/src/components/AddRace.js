@@ -18,22 +18,28 @@ const onSubmit = (e) => {
   setPassword('')
 }
   return (
-    <form className='add-form' onSubmit={onSubmit}>
+    <form className='add-form rounded-md flex align-center m-2 p-5 bg-gray-200' onSubmit={onSubmit}>
         <div className='form-control'>
-            <label>Race ID</label>
+            <label
+            className='bg-purple-300 text-gray-700 rounded-l-md p-2'>
+              Race ID</label>
             <input type="text" 
+            className='rounded-r-md p-2'
             placeholder='Race ID'
             value = {raceID}
             onChange={(e) => setRaceID(e.target.value) }/>
         </div>
         <div className='form-control'>
-            <label>Password from Organiser</label>
+            <label
+            className='bg-purple-300 text-gray-700 rounded-l-md ml-3 p-2'>
+              Password from Organiser</label>
             <input type="text" 
+            className='rounded-r-md p-2'
             placeholder='Password'
             value = {racePassword}
             onChange={(e) => setPassword(e.target.value)} />
         </div>  
-        <input type="submit" value='Join the Race' className='btn btn-block' />
+        <input type="submit" value='Join the Race' className= "ml-3 bg-purple-300 text-gray-700 rounded-md px-1"/>
     </form>
   )
 }

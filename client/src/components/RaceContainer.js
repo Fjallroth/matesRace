@@ -7,7 +7,7 @@ const RaceContainer = ({ title, planRace, buttonTitle, onAdd, showAdd }) => {
       <h1>{title}</h1>
 
       <Button
-        color={showAdd ? 'red' : 'green'}
+        color={showAdd ? "bg-gray-300 text-purple-700 rounded-md p-1" : "bg-purple-300 text-gray-700 rounded-md p-1"}
         text={<a href={planRace}>{buttonTitle}</a>}
         onClick={onAdd}
       />

@@ -9,23 +9,39 @@ const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET 
 const callbackURL = 'http://127.0.0.1:2121/raceMates/stravaCallback'
 
-async function getUserRefresh(userid, userStravaToken, userTokenExpire) {
-    const now = moment().unix();
-    if (now < userTokenExpire) {
-      // Access token is still valid
-      return;
+const getUserRefresh = async (user) => {
+  const now = moment().unix();
+  console.log(user)
+  if (now >= parseInt(user.usertokenExpire)) {
+    console.log("token expired")
+    try {
+      const { data } = await axios.post('https://www.strava.com/oauth/token', {
+        client_id: process.env.STRAVA_CLIENT_ID,
+        client_secret: process.env.STRAVA_CLIENT_SECRET,
+        grant_type: 'refresh_token',
+        refresh_token: user.userStravaRefresh,
+      })
+
+
+      await User.updateOne(
+        { _id: user.id },
+        {
+          userStravaAccess: data.access_token,
+          userStravaRefresh: data.refresh_token,
+          userTokenExpire: moment().unix() + data.expires_in,
+        }
+      );
+    } catch (error) {
+      console.error('Error refreshing Strava token:', error.message);
+      throw error;
     }
-    // Access token has expired, refresh it
-    const response = await axios.post(`https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaRefresh}&grant_type=refresh_token`, qs.stringify({
-    }), {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    });
-    
-    const data = response.data;
-    await updateUserWithData(data, userid);
-}
+  }
+  else{
+    console.log(now)
+    console.log(user.usertokenExpire)
+    console.log("token valid")
+  }
+};
 
 // async function getUserRefreshWithRefreshToken(userid, userStravaRefresh){
 //     await fetch(`https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaRefresh}&grant_type=refresh_token`, {
@@ -100,11 +116,7 @@ module.exports = {
     }
   },
     getRaces: async (req, res) => {
-      const now = moment().unix();
-      const { userStravaRefresh, userTokenExpire } = req.user;
-      if (now >= userTokenExpire) {
-        await getUserRefresh(req.user.id, userStravaRefresh);
-      }
+      await getUserRefresh(req.user);
       console.log(req.user);
       try {
         const races = await Races.find({

@@ -139,13 +139,13 @@ const selectRide = async (ride) =>{
 
 
   return (
-    <div className="flex flex-col w-full min-h-screen">
-    <div className="z-10 py-4 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 text-purple-600 dark:text-purple-300">
-      <Header class="flex align-end px-10" buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setshowPlanRace(!showPlanRace)} showAdd={showPlanRace}/>
+    <div className="flex flex-col w-full min-h-screen bg-gray-400 rounded-md">
+    <div className=" z-10 py-2 bg-white shadow-md container my-5 mx-auto px-4 sm:px-6 lg:px-8 text-purple-600 dark:text-purple-300 rounded-md">
+      <Header class="rounded-md flex align-end px-10" buttonTitle="Plan a race" title={"Welcome to mates race"} onAdd={() => setshowPlanRace(!showPlanRace)} showAdd={showPlanRace}/>
       {showPlanRace && <PlanRace onAdd={planRace}/>}
       
       </div>
-      <div className="z-5 py-10 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center h-full text-purple-600 dark:text-purple-300 my-8">
+      <div className="rounded-md z-5 py-5 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center h-full text-purple-600 dark:text-purple-300 my-2">
       <RaceContainer
         title={"Your upcoming races"}
         buttonTitle={"Join a race"}
@@ -170,7 +170,7 @@ const selectRide = async (ride) =>{
       </div>
       <div id="ride-details"></div>
       </div>
-      <div className="z-5 py-10 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center h-full text-purple-600 dark:text-purple-300 my-8">
+      <div className="rounded-md z-5 py-5 bg-white shadow-md container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center h-full text-purple-600 dark:text-purple-300 my-2">
       <PrevRaceContainer title={"Your previous races"}/>
       <div className="py-10 w-full">
       {races.length > 0 ? 

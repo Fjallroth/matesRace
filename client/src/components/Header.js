@@ -32,18 +32,18 @@ const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
               <div className="absolute right-0 mt-2 bg-white shadow-md rounded-md p-4 space-y-2">
                 <a
                   href="raceMates/linkStrava"
-                  className="block text-purple-600 hover:text-purple-800"
+                  className="block text-purple-600 hover:text-purple-800 text-center"
                 >
                   Link your Strava Account!
                 </a>
                 <a
                   href="/logout"
-                  className="block text-purple-600 hover:text-purple-800"
+                  className="block text-purple-600 hover:text-purple-800 text-center"
                 >
                   Logout
                 </a>
                 <Button
-                  color={showAdd ? 'red' : 'green'}
+                  color={showAdd ? "bg-gray-300 text-purple-700 rounded-md" : "bg-purple-300 text-gray-700 rounded-md "}
                   text={<a href={profileLink}>{buttonTitle}</a>}
                   onClick={onAdd}
                 />

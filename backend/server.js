@@ -28,7 +28,7 @@ app.use(cors({
 //   changeOrigin: true,
 // }));
 app.set('view engine', 'ejs')
-app.use(express.static(path.join(__dirname, '../a/build')));
+app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(logger('dev'))

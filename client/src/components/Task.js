@@ -77,10 +77,10 @@ const Race = ({
   };
 
   return (
-    <div className="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+    <div className="rounded-md flex align-center m-2 p-5 bg-purple-200">
       <div className="w-full overflow-x-auto">
         {userIsInJoinRequests ? (
-          <p className="p-4 text-gray-700 dark:text-gray-400">
+          <p className="rounded-md flex align-center m-2 p-5 bg-gray-200">
             Your join request has been sent and must be approved by the race organizer.
           </p>
         ) : (
@@ -89,7 +89,7 @@ const Race = ({
               {isRideSubmitted ? (
                 <h3 className="text-gray-700 dark:text-gray-400">
                   {race.raceName}{' '}
-                  <p className="text-blue-600">Ride submitted</p>
+                  <p className="text-gray-700">Ride submitted</p>
                 </h3>
               ) : (
                 <h3 className="text-gray-700 dark:text-gray-400">{race.raceName}</h3>
@@ -110,7 +110,7 @@ const Race = ({
               </p>
   
               {race.organiserID == userId ? (
-                <h4 className="text-gray-700 dark:text-gray-400">
+                <h4 className="rounded-md flex align-center m-2 p-5 bg-gray-200">
                   You are the race organiser, share these details with participants:
                   <p>Race ID: {race._id}</p>
                   <p>Password: {race.partPass}</p>
@@ -120,7 +120,7 @@ const Race = ({
               )}
   
               {race.organiserID === userId && race.joinRequests.length > 0 && (
-                <div>
+                <div className="rounded-md flex align-center m-2 p-5 bg-gray-200">
                   <h4 className="text-gray-700 dark:text-gray-400">Join Requests:</h4>
                   {race.joinRequests.map((request) => (
                     <div key={request._id} className="flex items-center space-x-2">
@@ -141,7 +141,7 @@ const Race = ({
   
               {isRideSubmitted ? (
                 <Button
-                  color="blue"
+                  className="bg-gray-300 text-purple-700 rounded-md p-1"
                   text="Submitted the wrong ride?"
                   onClick={() => {
                     fetchRide(race);
@@ -149,7 +149,7 @@ const Race = ({
                 />
               ) : (
                 <Button
-                  color="green"
+                  className="bg-gray-300 text-purple-700 rounded-md p-1"
                   text="Upload ride"
                   onClick={() => {
                     fetchRide(race);
