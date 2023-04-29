@@ -1,5 +1,5 @@
-import React from 'react'
-import Button from './Button'
+import React from "react";
+import Button from "./Button";
 
 function toHoursAndMinutes(totalSeconds) {
   const totalMinutes = Math.floor(totalSeconds / 60);
@@ -7,25 +7,23 @@ function toHoursAndMinutes(totalSeconds) {
   const seconds = totalSeconds % 60;
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-  if(hours == 0 && minutes == 0){
+  if (hours == 0 && minutes == 0) {
     return `${seconds}s`;
-  }
-  else if(hours == 0 ){
+  } else if (hours == 0) {
     return `${minutes}m${seconds}s`;
+  } else {
+    return `${hours}hr${minutes}m${seconds}s`;
   }
-  else{
-  return `${hours}hr${minutes}m${seconds}s`;
-}
 }
 
-const RideList = ({rides, selectRide}) => {
-  let count = 0
+const RideList = ({ rides, selectRide }) => {
+  let count = 0;
   const rideListItems = rides.map((ride) => {
     if (ride.segments) {
       count += 1;
       return (
         <div key={Math.floor(Math.random() * 100000)}>
-          <h2>{ride.name}</h2>
+          <h2 className="text-base font-bold text-purple-800">{ride.name}</h2>
           <table>
             <tr>
               <th>Segment</th>
@@ -39,7 +37,7 @@ const RideList = ({rides, selectRide}) => {
             ))}
           </table>
           <Button
-            color="green"
+            color="purple"
             onClick={() => {
               selectRide(ride);
             }}

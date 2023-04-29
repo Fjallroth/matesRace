@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
-import Button from './Button';
-import {useState, useEffect} from 'react';
+import PropTypes from "prop-types";
+import Button from "./Button";
+import { useState, useEffect } from "react";
 
 const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
   const [hamburgerOpen, setHamburgerOpen] = useState(false);
@@ -12,9 +12,9 @@ const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
   return (
     <header className="header w-full">
       <div className="container mx-auto max-w-6xl">
-        <div className="flex justify-between items-center py-4 px-6">
+        <div className="text-xl font-bold text-purple-800 flex justify-between items-center py-4">
           <h1 className="text-center">{title}</h1>
-          <div className="relative">
+          <div className="text-base font-normal text-purple-800 relative">
             <button
               className="align-end rounded-full focus:shadow-outline-purple focus:outline-none"
               aria-label="Account"
@@ -43,7 +43,11 @@ const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
                   Logout
                 </a>
                 <Button
-                  color={showAdd ? "bg-gray-300 text-purple-700 rounded-md" : "bg-purple-300 text-gray-700 rounded-md "}
+                  color={
+                    showAdd
+                      ? "bg-gray-300 text-purple-700 rounded-md"
+                      : "bg-purple-300 text-gray-700 rounded-md "
+                  }
                   text={<a href={profileLink}>{buttonTitle}</a>}
                   onClick={onAdd}
                 />
