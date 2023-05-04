@@ -170,7 +170,7 @@ const Race = ({
 
               {isRideSubmitted ? (
                 <Button
-                  color="bg-gray-300 text-purple-800 rounded-md p-1 my-3"
+                  color="bg-purple-300 text-gray-700 rounded-md p-1"
                   text="Submitted the wrong ride?"
                   onClick={() => {
                     fetchRide(race);
@@ -178,7 +178,7 @@ const Race = ({
                 />
               ) : (
                 <Button
-                  color="bg-gray-300 text-purple-800 rounded-md p-1 my-3"
+                  color="bg-purple-300 text-gray-700 rounded-md p-1"
                   text="Upload ride"
                   onClick={() => {
                     fetchRide(race);
