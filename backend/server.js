@@ -28,6 +28,7 @@ app.use(
 //   target: 'https://www.strava.com',
 //   changeOrigin: true,
 // }));
+app.set("views", path.join(__dirname, "../client/build"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "../client/build")));
 
