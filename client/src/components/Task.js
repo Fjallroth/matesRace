@@ -17,7 +17,16 @@ const Race = ({
   const [sortKey, setSortKey] = useState("totalTime");
 
   const sortLeaderboard = (leaderboard, key) => {
-    return leaderboard.slice().sort((a, b) => {
+    const filteredLeaderboard = leaderboard.filter((participant) => {
+      if (key.startsWith("segment")) {
+        const index = parseInt(key.split("-")[1]);
+        return participant.segments[index].time;
+      } else {
+        return participant[key];
+      }
+    });
+
+    return filteredLeaderboard.sort((a, b) => {
       if (key.startsWith("segment")) {
         const index = parseInt(key.split("-")[1]);
         return a.segments[index].time - b.segments[index].time;
