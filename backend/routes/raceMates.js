@@ -7,7 +7,7 @@ const { ensureAuth } = require("../middleware/auth");
 
 router.get("/", homeController.getReact);
 
-router.get("/races", ensureAuth, raceController.getRaces);
+router.get("/races", raceController.getRaces);
 
 router.post("/planRace", raceController.planRace); // add ensure Auth
 
