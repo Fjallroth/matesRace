@@ -55,7 +55,7 @@ app.use(passport.session());
 
 app.use(flash());
 
-app.use("/api", mainRoutes);
-app.use("/api/raceMates", raceRoutes);
+app.use("/", mainRoutes);
+app.use("/raceMates", raceRoutes);
 
 module.exports = app;
