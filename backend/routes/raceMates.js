@@ -5,7 +5,7 @@ const homeController = require("../controllers/home");
 
 const { ensureAuth } = require("../middleware/auth");
 
-router.get("/", ensureAuth, homeController.getReact);
+router.get("/", homeController.getReact);
 
 router.get("/races", ensureAuth, raceController.getRaces);
 
