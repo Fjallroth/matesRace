@@ -31,10 +31,10 @@ app.use(
   session({
     secret: "keyboard cat",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       maxAge: 60000 * 60 * 8,
-      sameSite: "Strict",
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
     },
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
