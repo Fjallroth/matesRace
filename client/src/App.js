@@ -88,13 +88,13 @@ const App = () => {
   };
 
   const fetchRace = async () => {
-    const res = await fetch("http://localhost:2121/raceMates/races");
+    const res = await fetch("/api/raceMates/races");
     const data = await res.json();
     return data;
   };
   const planRace = async (race) => {
     console.log(race);
-    const res = await fetch(`http://localhost:2121/raceMates/planRace`, {
+    const res = await fetch(`/api/raceMates/planRace`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -106,7 +106,7 @@ const App = () => {
   };
   const addRace = async (race) => {
     console.log(race);
-    const res = await fetch(`http://localhost:2121/raceMates/joinRace`, {
+    const res = await fetch(`/api/raceMates/joinRace`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -119,7 +119,7 @@ const App = () => {
   const fetchRide = async (race) => {
     console.log(race);
     console.log(race._id);
-    const res = await fetch("http://localhost:2121/raceMates/selectRide", {
+    const res = await fetch("/api/raceMates/selectRide", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -138,7 +138,7 @@ const App = () => {
   };
   const selectRide = async (ride) => {
     console.log(ride);
-    const res = await fetch("http://localhost:2121/raceMates/submitRide", {
+    const res = await fetch("/api/raceMates/submitRide", {
       method: "PUT",
       headers: {
         "Content-type": "application/json",

@@ -21,7 +21,7 @@ require("./config/passport")(passport);
 connectDB();
 app.use(
   cors({
-    origin: "http://localhost:2121",
+    origin: "/api",
   })
 );
 // app.use('/strava', createProxyMiddleware({
@@ -31,9 +31,6 @@ app.use(
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "../client/build")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(logger("dev"));
@@ -58,9 +55,7 @@ app.use(passport.session());
 
 app.use(flash());
 
-app.use("/", mainRoutes);
-app.use("/raceMates", raceRoutes);
+app.use("/api", mainRoutes);
+app.use("/api/raceMates", raceRoutes);
 
-app.listen(process.env.PORT, () => {
-  console.log("Server is running, you better catch it!");
-});
+module.exports = app;

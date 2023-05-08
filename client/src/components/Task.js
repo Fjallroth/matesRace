@@ -46,7 +46,7 @@ const Race = ({
   const approveJoinRequest = async (raceId, userId) => {
     try {
       const response = await fetch(
-        `http://localhost:2121/raceMates/approveJoin/${raceId}/${userId}`,
+        `/api/raceMates/approveJoin/${raceId}/${userId}`,
         {
           method: "PUT",
         }
@@ -69,16 +69,13 @@ const Race = ({
         (request) => request._id !== userId
       );
 
-      const response = await fetch(
-        `http://localhost:2121/raceMates/races/${race._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ joinRequests: updatedJoinRequests }),
-        }
-      );
+      const response = await fetch(`/api/raceMates/races/${race._id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ joinRequests: updatedJoinRequests }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to ignore the join request");
