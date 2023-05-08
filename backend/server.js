@@ -21,13 +21,13 @@ require("./config/passport")(passport);
 connectDB();
 app.use(
   cors({
-    origin: "/api",
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://mates-race.vercel.app/"
+        : "http://localhost:3000",
   })
 );
-// app.use('/strava', createProxyMiddleware({
-//   target: 'https://www.strava.com',
-//   changeOrigin: true,
-// }));
+
 app.set("views", path.join(__dirname, "../client/build"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "../client/build")));
@@ -44,8 +44,8 @@ app.use(
       sameSite: "Strict",
       secure: process.env.NODE_ENV === "production" ? true : false,
     },
-    resave: false, // Set this to false
-    saveUninitialized: false,
+    resave: false,
+    saveUninitialized: true,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
