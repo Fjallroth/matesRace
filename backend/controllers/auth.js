@@ -12,6 +12,7 @@ exports.getLogin = (req, res) => {
 };
 
 exports.postLogin = (req, res, next) => {
+  console.log("req.sessionID:", req.sessionID);
   const validationErrors = [];
   if (!validator.isEmail(req.body.email))
     validationErrors.push({ msg: "Please enter a valid email address." });
@@ -42,6 +43,7 @@ exports.postLogin = (req, res, next) => {
         if (err) {
           return next(err);
         }
+        console.log("User logged in:", user);
         req.flash("success", { msg: "Success! You are logged in." });
         res.redirect(req.session.returnTo || "/raceMates");
       });
