@@ -24,7 +24,7 @@ app.use(
     origin:
       process.env.NODE_ENV === "production"
         ? "https://mates-race.vercel.app/"
-        : "https://localhost:2121",
+        : "http://localhost:2121",
   })
 );
 
@@ -56,6 +56,10 @@ app.use(passport.session());
 
 app.use(flash());
 
+app.use((req, res, next) => {
+  console.log(req.session);
+  next();
+});
 app.use("/", mainRoutes);
 app.use("/raceMates", raceRoutes);
 
