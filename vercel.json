@@ -19,11 +19,12 @@
       {
         "src": "/(assets|static)/(.*)",
         "headers": { "cache-control": "s-maxage=31536000,immutable" },
-        "dest": "/client/$1/$2"
+        "dest": "/client/build/$1/$2"
       },
       {
         "src": "/(.*)",
-        "dest": "/client/index.html"
+        "dest": "/client/build/index.html"
       }
     ]
-}
+  }
+  
