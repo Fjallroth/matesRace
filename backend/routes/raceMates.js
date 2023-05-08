@@ -1,29 +1,28 @@
-const express = require('express')
-const router = express.Router()
-const raceController = require('../controllers/raceMates') 
-const homeController = require('../controllers/home')
+const express = require("express");
+const router = express.Router();
+const raceController = require("../controllers/raceMates");
+const homeController = require("../controllers/home");
 
-const { ensureAuth } = require('../middleware/auth')
+const { ensureAuth } = require("../middleware/auth");
 
-router.get('/', ensureAuth, homeController.getReact)
+router.get("/", homeController.getReact);
 
-router.get('/races', raceController.getRaces)
+router.get("/races", raceController.getRaces);
 
-router.post('/planRace', raceController.planRace) // add ensure Auth
+router.post("/planRace", raceController.planRace); // add ensure Auth
 
-router.put('/joinRace', raceController.joinRace) 
+router.put("/joinRace", raceController.joinRace);
 
-router.put('/approveJoin/:raceId/:userId', raceController.approveJoin)
+router.put("/approveJoin/:raceId/:userId", raceController.approveJoin);
 
-router.post('/selectRide', raceController.selectRide)
+router.post("/selectRide", raceController.selectRide);
 
-router.put('/submitRide',  raceController.submitRide)
+router.put("/submitRide", raceController.submitRide);
 
-router.get('/linkStrava',  raceController.linkStrava)
+router.get("/linkStrava", raceController.linkStrava);
 
-router.get('/stravaCallback',  raceController.stravaCallback)
+router.get("/stravaCallback", raceController.stravaCallback);
 
-//delete ride? 
+//delete ride?
 
-
-module.exports = router
+module.exports = router;
