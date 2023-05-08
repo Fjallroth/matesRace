@@ -30,7 +30,7 @@ app.use(logger("dev"));
 app.use(
   session({
     secret: "keyboard cat",
-    resave: true,
+    resave: false,
     saveUninitialized: true,
     cookie: {
       maxAge: 60000 * 60 * 8,
