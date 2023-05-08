@@ -15,7 +15,6 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 require("dotenv").config({ path: "./config/.env" });
 
-// Passport config
 require("./config/passport")(passport);
 
 connectDB();
@@ -49,8 +48,6 @@ app.use(
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
-
-// Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 

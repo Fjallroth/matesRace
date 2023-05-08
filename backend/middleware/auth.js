@@ -6,8 +6,9 @@ module.exports = {
       return next();
     } else {
       console.log(req.sessionID);
-      console.log("user not authenicated");
-      return res.redirect("/");
+      console.log("user not authenticated");
+      req.flash("error_msg", "Please log in to view this resource");
+      return res.redirect("/login");
     }
   },
 };

@@ -31,7 +31,6 @@ exports.postLogin = (req, res, next) => {
     "local",
     { failureRedirect: "/login", failureFlash: true, keepSessionInfo: true },
     (err, user, info) => {
-      //double check this
       if (err) {
         return next(err);
       }
@@ -39,13 +38,19 @@ exports.postLogin = (req, res, next) => {
         req.flash("errors", info);
         return res.redirect("/login");
       }
-      req.logIn(user, (err) => {
+      req.login(user, { session: false }, (err) => {
         if (err) {
           return next(err);
         }
         console.log("User logged in:", user);
-        req.flash("success", { msg: "Success! You are logged in." });
-        res.redirect(req.session.returnTo || "/raceMates");
+        req.session.user = user;
+        req.session.save((err) => {
+          if (err) {
+            return next(err);
+          }
+          req.flash("success", { msg: "Success! You are logged in." });
+          res.redirect(req.session.returnTo || "/raceMates");
+        });
       });
     }
   )(req, res, next);
