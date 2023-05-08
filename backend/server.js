@@ -9,8 +9,10 @@ const logger = require("morgan");
 const connectDB = require("./config/database");
 const mainRoutes = require("./routes/main");
 const raceRoutes = require("./routes/raceMates");
-const { ensureGuest } = require("./middleware/auth");
-
+let cors = require("cors");
+const path = require("path");
+const { createProxyMiddleware } = require("http-proxy-middleware");
+const { ensureAuth } = require("./middleware/auth");
 require("dotenv").config({ path: "./config/.env" });
 
 require("./config/passport")(passport);
@@ -24,22 +26,20 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(logger("dev"));
-
 // Sessions
 app.use(
   session({
     secret: "keyboard cat",
     resave: true,
     saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     cookie: {
       maxAge: 60000 * 60 * 8,
-      sameSite: "strict",
+      sameSite: "Strict",
       secure: process.env.NODE_ENV === "production",
     },
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -50,7 +50,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Set up CORS after session middleware
 app.use(
   cors({
     origin:
@@ -59,7 +58,6 @@ app.use(
         : "http://localhost:2121",
   })
 );
-
 app.use("/", mainRoutes);
 app.use("/raceMates", raceRoutes);
 
