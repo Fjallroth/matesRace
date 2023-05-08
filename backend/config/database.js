@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-require("dotenv").config({ path: "./config/.env" });
-
 const connectDB = async () => {
   try {
     console.log("MONGODB_URI:", process.env.DB_STRING); // Add this line to print the value
