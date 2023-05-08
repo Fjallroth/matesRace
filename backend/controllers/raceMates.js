@@ -7,7 +7,7 @@ const { base } = require("../models/Race");
 require("dotenv").config({ path: "./config/.env" });
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
-const callbackURL = "http://127.0.0.1:2121/raceMates/stravaCallback";
+const callbackURL = "https://127.0.0.1:2121/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
   const now = moment().unix();
@@ -46,7 +46,7 @@ const getUserRefresh = async (user) => {
 async function getUserData(userid, userStravaToken) {
   try {
     const response = await axios.post(
-      `http://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaToken}&grant_type=authorization_code`,
+      `https://www.strava.com/oauth/token?client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${userStravaToken}&grant_type=authorization_code`,
       {
         method: "POST",
         headers: {

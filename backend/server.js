@@ -24,7 +24,7 @@ app.use(
     origin:
       process.env.NODE_ENV === "production"
         ? "https://mates-race.vercel.app/"
-        : "http://localhost:2121",
+        : "https://localhost:2121",
   })
 );
 
