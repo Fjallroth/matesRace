@@ -6,6 +6,6 @@ module.exports = {
   },
   getReact: (req, res) => {
     res.sendFile(path.join(__dirname, "../../client/build", "app.html"));
-    console.log("react");
+    console.log(req.user);
   },
 };

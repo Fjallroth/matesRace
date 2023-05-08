@@ -9,7 +9,7 @@ router.get("/", homeController.getReact);
 
 router.get("/races", ensureAuth, raceController.getRaces);
 
-router.post("/planRace", ensureAuth, raceController.planRace); // add ensure Auth
+router.post("/planRace", ensureAuth, raceController.planRace);
 
 router.put("/joinRace", ensureAuth, raceController.joinRace);
 

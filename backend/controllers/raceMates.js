@@ -113,8 +113,9 @@ module.exports = {
     }
   },
   getRaces: async (req, res) => {
-    await getUserRefresh(req.user);
     console.log(req.user);
+    await getUserRefresh(req.user);
+
     try {
       const races = await Races.find({
         $or: [
