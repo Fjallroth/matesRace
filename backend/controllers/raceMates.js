@@ -13,6 +13,8 @@ const getUserRefresh = async (user) => {
   const now = moment().unix();
   console.log(user);
   if (now >= parseInt(user.usertokenExpire)) {
+    // if (now >= parseInt(user.usertokenExpire)) {
+    //TypeError: Cannot read properties of undefined (reading 'usertokenExpire')
     console.log("token expired");
     try {
       const { data } = await axios.post("https://www.strava.com/oauth/token", {
