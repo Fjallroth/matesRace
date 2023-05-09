@@ -48,6 +48,7 @@ exports.postLogin = (req, res, next) => {
         sameSite: "Lax",
         secure: true,
       });
+      console.log(res.cookie);
       res.redirect("/raceMates");
     });
   });

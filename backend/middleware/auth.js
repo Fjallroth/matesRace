@@ -9,6 +9,7 @@ module.exports = {
       const decoded = jwt.verify(token, process.env.JWTKey);
       req.user = decoded;
       console.log("User authenticated:", req.user);
+      console.log(req.cookies);
       next();
     } catch (err) {
       console.error(err);

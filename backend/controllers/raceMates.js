@@ -111,9 +111,8 @@ module.exports = {
     }
   },
   getRaces: async (req, res) => {
-    console.log("Authenticated user:", req.user);
     await getUserRefresh(req.user);
-
+    console.log(req.cookies);
     try {
       const races = await Races.find({
         $or: [
@@ -220,6 +219,7 @@ module.exports = {
     }
   },
   selectRide: async (req, res) => {
+    console.log(req.cookies);
     try {
       const raceSegments = req.body.segments.map((e) => parseInt(e));
       const response = await axios.get(
