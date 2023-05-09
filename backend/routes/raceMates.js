@@ -19,9 +19,9 @@ router.put(
   raceController.approveJoin
 );
 
-router.post("/selectRide", ensureAuth, raceController.selectRide);
+router.post("/selectRide", raceController.selectRide);
 
-router.put("/submitRide", ensureAuth, raceController.submitRide);
+router.put("/submitRide", raceController.submitRide);
 
 router.get("/linkStrava", ensureAuth, raceController.linkStrava);
 
