@@ -124,7 +124,7 @@ module.exports = {
         .populate("joinRequests")
         .sort({ startDate: 1 });
       console.log({ races });
-      res.json({ races: races, user: req.user.id });
+      res.json({ races: races, user: req.user._id });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Server Error" });
