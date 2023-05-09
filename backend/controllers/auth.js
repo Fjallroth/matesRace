@@ -43,8 +43,8 @@ exports.postLogin = (req, res, next) => {
       const token = jwt.sign(user.toJSON(), process.env.JWTKey, {
         expiresIn: "8h",
       }); //createkeys
-      // Store the JWT token in a cookie
-      res.cookie("jwt", token, { httpOnly: false, maxAge: 8 * 60 * 60 * 1000 });
+      // Store the JWT token in localStorage
+      localStorage.setItem("jwt", token);
       // Redirect the user to the desired page
       res.redirect("/raceMates");
     });
