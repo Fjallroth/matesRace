@@ -27,7 +27,10 @@ exports.postLogin = (req, res, next) => {
   });
 
   passport.authenticate("local", { session: false }, (err, user, info) => {
-    if (err || !user) {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
       return res.status(400).json({
         message: "Something is not right",
         user: user,
@@ -35,12 +38,12 @@ exports.postLogin = (req, res, next) => {
     }
     req.login(user, { session: false }, (err) => {
       if (err) {
-        res.send(err);
+        return next(err);
       }
       const token = jwt.sign(user.toJSON(), process.env.JWTKey); //createkeys
       return res.json({ user, token });
     });
-  })(req, res);
+  })(req, res, next);
 };
 
 exports.logout = (req, res) => {
