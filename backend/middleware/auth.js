@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 module.exports = {
   ensureAuth: function (req, res, next) {
     const token = req.cookies.token; // Get the token from the cookies
