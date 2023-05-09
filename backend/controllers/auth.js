@@ -31,23 +31,22 @@ exports.postLogin = (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.status(400).json({
-        message: "Something is not right",
-      });
+      return res.redirect("/login");
     }
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (err) {
         return next(err);
       }
       if (!isMatch) {
-        return res.status(400).json({
-          message: "Something is not right",
-        });
+        return res.redirect("/login");
       }
       const token = jwt.sign(user.toJSON(), process.env.JWTKey, {
         expiresIn: "8h",
       }); //createkeys
-      return res.json({ user, token });
+      // Store the JWT token in a cookie
+      res.cookie("jwt", token, { httpOnly: true, maxAge: 8 * 60 * 60 * 1000 });
+      // Redirect the user to the desired page
+      res.redirect("/raceMates");
     });
   });
 };
