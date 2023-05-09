@@ -1,6 +1,6 @@
 module.exports = {
   ensureAuth: function (req, res, next) {
-    const token = localStorage.getItem("jwt");
+    const token = req.cookies.token; // Get the token from the cookies
     if (!token) {
       return res.status(401).json({ error: "Unauthorized. Please log in." });
     }

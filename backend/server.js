@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const passport = require("passport");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const MongoStore = require("connect-mongo")(session);
 const flash = require("express-flash");
 const logger = require("morgan");
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(logger("dev"));
-
+app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use((req, res, next) => {

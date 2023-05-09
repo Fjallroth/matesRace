@@ -42,10 +42,8 @@ exports.postLogin = (req, res, next) => {
       }
       const token = jwt.sign(user.toJSON(), process.env.JWTKey, {
         expiresIn: "8h",
-      }); //createkeys
-      // Store the JWT token in localStorage
-      localStorage.setItem("jwt", token);
-      // Redirect the user to the desired page
+      });
+      res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
       res.redirect("/raceMates");
     });
   });
@@ -105,6 +103,7 @@ exports.postSignup = (req, res, next) => {
         const token = jwt.sign({ id: user._id }, process.env.JWTKey, {
           expiresIn: "8h",
         });
+        res.cookie("token", token, { httpOnly: true, sameSite: "strict" });
         return res.json({ user, token });
       });
     }
