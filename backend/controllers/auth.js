@@ -47,7 +47,7 @@ exports.postLogin = (req, res, next) => {
       const token = jwt.sign(user.toJSON(), process.env.JWTKey, {
         expiresIn: "8h",
       }); //createkeys
-      return res.json({ user, token });
+      return res.json({ user, token, redirectTo: "/raceMates" });
     });
   });
 };
@@ -106,7 +106,7 @@ exports.postSignup = (req, res, next) => {
         const token = jwt.sign({ id: user._id }, process.env.JWTKey, {
           expiresIn: "8h",
         });
-        return res.json({ user, token });
+        return res.json({ user, token, redirectTo: "/raceMates" });
       });
     }
   );
