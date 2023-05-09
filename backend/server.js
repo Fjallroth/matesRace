@@ -45,5 +45,7 @@ app.use(
 );
 app.use("/", mainRoutes);
 app.use("/raceMates", raceRoutes);
-
+app.listen(process.env.PORT, () => {
+  console.log("Server is running, you better catch it!");
+});
 module.exports = app;

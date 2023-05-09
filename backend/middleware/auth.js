@@ -1,15 +1,17 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 module.exports = {
-  ensureAuth: function (req, res, next) {
+  ensureAuth: async function (req, res, next) {
     const token = req.cookies.token; // Get the token from the cookies
     if (!token) {
       return res.status(401).json({ error: "Unauthorized. Please log in." });
     }
     try {
       const decoded = jwt.verify(token, process.env.JWTKey);
-      req.user = decoded;
-      console.log("User authenticated:", req.user);
-      console.log(req.cookies);
+      console.log(decoded);
+      req.user = await User.findOne({ _id: decoded._id });
+      console.log(req.user);
+
       next();
     } catch (err) {
       console.error(err);

@@ -11,9 +11,9 @@ const callbackURL = "https://mates-race.vercel.app/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
   const now = moment().unix();
-  console.log(user);
-  if (now >= parseInt(user.usertokenExpire)) {
+  if (now >= user.usertokenExpire) {
     console.log("token expired");
+    console.log(user.userStravaAccess);
     try {
       const { data } = await axios.post("https://www.strava.com/oauth/token", {
         client_id: process.env.STRAVA_CLIENT_ID,
@@ -21,15 +21,19 @@ const getUserRefresh = async (user) => {
         grant_type: "refresh_token",
         refresh_token: user.userStravaRefresh,
       });
-
-      await User.updateOne(
-        { _id: user.id },
+      console.log(data);
+      console.log(user._id);
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: user._id },
         {
           userStravaAccess: data.access_token,
           userStravaRefresh: data.refresh_token,
-          userTokenExpire: moment().unix() + data.expires_in,
-        }
+          usertokenExpire: data.expires_at,
+        },
+        { new: true }
       );
+
+      console.log("Updated User:", updatedUser);
     } catch (error) {
       console.error("Error refreshing Strava token:", error.message);
       throw error;
@@ -112,7 +116,6 @@ module.exports = {
   },
   getRaces: async (req, res) => {
     await getUserRefresh(req.user);
-    console.log(req.cookies);
     try {
       const races = await Races.find({
         $or: [
@@ -122,7 +125,6 @@ module.exports = {
       })
         .populate("joinRequests")
         .sort({ startDate: 1 });
-      console.log({ races });
       res.json({ races: races, user: req.user._id });
     } catch (err) {
       console.log(err);
@@ -220,6 +222,7 @@ module.exports = {
   },
   selectRide: async (req, res) => {
     console.log(req.cookies);
+    console.log(req.body);
     try {
       const raceSegments = req.body.segments.map((e) => parseInt(e));
       const response = await axios.get(

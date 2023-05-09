@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    console.log("MONGODB_URI:", process.env.DB_STRING); // Add this line to print the value
+    console.log("MONGODB_URI:", process.env.DB_STRING);
 
     const conn = await mongoose.connect(process.env.DB_STRING, {
       useNewUrlParser: true,

@@ -88,7 +88,6 @@ const App = () => {
   };
 
   const fetchRace = async () => {
-    const token = localStorage.getItem("jwt");
     const res = await fetch("/raceMates/races");
     const data = await res.json();
     return data;
