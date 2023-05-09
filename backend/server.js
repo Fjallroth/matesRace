@@ -29,8 +29,6 @@ app.use(logger("dev"));
 
 app.use(passport.initialize());
 
-app.use(flash());
-
 app.use((req, res, next) => {
   console.log(req.session); //check if this works with JWT
   next();
