@@ -32,17 +32,21 @@
             password: password,
           }),
         })
-        .then(response => response.json())
-        .then(data => {
-          localStorage.setItem('jwt', data.token);
-          // Here you can redirect to the desired page after successful login
-          window.location.href = '/raceMates'; 
+        .then(response => {
+          // Check if the response status is 200 (OK)
+          if(response.status === 200) {
+            // Redirect to the desired page after successful login
+            window.location.href = '/raceMates'; 
+          } else {
+            console.error('Login failed');
+          }
         })
         .catch((error) => {
           console.error('Error:', error);
         });
       });
     </script>
+    
   </head>
   <body>
 

@@ -16,22 +16,37 @@
     ></script>
     <script src="../assets/js/init-alpine.js"></script>
     <script>
-      const form = document.querySelector('#login-form');
-      form.addEventListener('submit', (event) => {
+      document.getElementById('login-form').addEventListener('submit', function(event) {
         event.preventDefault();
-        const formData = new FormData(form);
+    
+        const email = document.getElementById('email-input').value;
+        const password = document.getElementById('password-input').value;
+    
         fetch('/login', {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
         })
-        .then(response => response.json())
-        .then(data => {
-          // redirect to /raceMates
-          window.location.href = '/raceMates';
+        .then(response => {
+          // Check if the response status is 200 (OK)
+          if(response.status === 200) {
+            // Redirect to the desired page after successful login
+            window.location.href = '/raceMates'; 
+          } else {
+            console.error('Login failed');
+          }
         })
-        .catch(error => console.error(error));
+        .catch((error) => {
+          console.error('Error:', error);
+        });
       });
     </script>
+    
   </head>
   <body>
 
