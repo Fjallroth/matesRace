@@ -111,7 +111,7 @@ module.exports = {
     }
   },
   getRaces: async (req, res) => {
-    console.log(req.user);
+    console.log("Authenticated user:", req.user);
     await getUserRefresh(req.user);
 
     try {
@@ -267,6 +267,7 @@ module.exports = {
   },
 
   submitRide: async (req, res) => {
+    console.log("Authenticated user:", req.user);
     const user = req.user.id;
 
     try {
