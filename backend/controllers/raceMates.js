@@ -7,7 +7,7 @@ const { base } = require("../models/Race");
 require("dotenv").config({ path: "./config/.env" });
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
-const callbackURL = "https://127.0.0.1:2121/raceMates/stravaCallback";
+const callbackURL = "https://mates-race.vercel.app/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
   const now = moment().unix();
