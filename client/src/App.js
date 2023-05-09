@@ -88,16 +88,23 @@ const App = () => {
   };
 
   const fetchRace = async () => {
-    const res = await fetch("/raceMates/races");
+    const token = localStorage.getItem("jwt");
+    const res = await fetch("/raceMates/races", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await res.json();
     return data;
   };
   const planRace = async (race) => {
+    const token = localStorage.getItem("jwt");
     console.log(race);
     const res = await fetch(`/raceMates/planRace`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(race),
     });
@@ -105,11 +112,13 @@ const App = () => {
     await updateRaces();
   };
   const addRace = async (race) => {
+    const token = localStorage.getItem("jwt");
     console.log(race);
     const res = await fetch(`/raceMates/joinRace`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(race),
     });
@@ -117,12 +126,14 @@ const App = () => {
     await updateRaces();
   };
   const fetchRide = async (race) => {
+    const token = localStorage.getItem("jwt");
     console.log(race);
     console.log(race._id);
     const res = await fetch("/raceMates/selectRide", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(race),
     });
@@ -137,11 +148,13 @@ const App = () => {
     setRaceID(race._id);
   };
   const selectRide = async (ride) => {
+    const token = localStorage.getItem("jwt");
     console.log(ride);
     const res = await fetch("/raceMates/submitRide", {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(ride),
     });

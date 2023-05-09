@@ -1,14 +1,23 @@
 module.exports = {
   ensureAuth: function (req, res, next) {
-    if (req.isAuthenticated()) {
-      console.log(req.sessionID);
-      console.log("ensureAuth middleware called");
-      return next();
-    } else {
-      console.log(req.sessionID);
-      console.log("user not authenticated");
-      req.flash("error_msg", "Please log in to view this resource");
-      return res.redirect("/login");
-    }
+    passport.authenticate(
+      "jwt",
+      { session: false },
+      function (err, user, info) {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json({ error: "An error occurred during authentication." });
+        }
+        if (!user) {
+          return res
+            .status(401)
+            .json({ error: "Unauthorized. Please log in." });
+        }
+        req.user = user;
+        next();
+      }
+    )(req, res, next);
   },
 };

@@ -44,11 +44,15 @@ const Race = ({
   const userIsInJoinRequests = race.joinRequests.includes(userId);
 
   const approveJoinRequest = async (raceId, userId) => {
+    const token = localStorage.getItem("jwt");
     try {
       const response = await fetch(
         `/raceMates/approveJoin/${raceId}/${userId}`,
         {
           method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -64,6 +68,7 @@ const Race = ({
   };
 
   const ignoreJoinRequest = async (request) => {
+    const token = localStorage.getItem("jwt");
     try {
       const updatedJoinRequests = race.joinRequests.filter(
         (request) => request._id !== userId
@@ -73,6 +78,7 @@ const Race = ({
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ joinRequests: updatedJoinRequests }),
       });

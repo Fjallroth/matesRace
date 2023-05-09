@@ -1,6 +1,7 @@
 const passport = require("passport");
 const validator = require("validator");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 exports.getLogin = (req, res) => {
   if (req.user) {
@@ -27,33 +28,21 @@ exports.postLogin = (req, res, next) => {
     gmail_remove_dots: false,
   });
 
-  passport.authenticate(
-    "local",
-    { failureRedirect: "/login", failureFlash: true, keepSessionInfo: true },
-    (err, user, info) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        req.flash("errors", info);
-        return res.redirect("/login");
-      }
-      req.login(user, { session: false }, (err) => {
-        if (err) {
-          return next(err);
-        }
-        console.log("User logged in:", user);
-        req.session.user = user;
-        req.session.save((err) => {
-          if (err) {
-            return next(err);
-          }
-          req.flash("success", { msg: "Success! You are logged in." });
-          res.redirect(req.session.returnTo || "/raceMates");
-        });
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err || !user) {
+      return res.status(400).json({
+        message: "Something is not right",
+        user: user,
       });
     }
-  )(req, res, next);
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.send(err);
+      }
+      const token = jwt.sign(user.toJSON(), process.env.JWTKey); //createkeys
+      return res.json({ user, token });
+    });
+  })(req, res);
 };
 
 exports.logout = (req, res) => {
@@ -118,12 +107,11 @@ exports.postSignup = (req, res, next) => {
         if (err) {
           return next(err);
         }
-        req.logIn(user, (err) => {
-          if (err) {
-            return next(err);
-          }
-          res.redirect("/raceMates");
+        const token = jwt.sign({ id: user._id }, process.env.JWTKey, {
+          //createkeys
+          expiresIn: "8h",
         });
+        return res.json({ user, token });
       });
     }
   );

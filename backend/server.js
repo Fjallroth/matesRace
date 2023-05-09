@@ -26,27 +26,13 @@ app.use(express.static(path.join(__dirname, "../client/build")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(logger("dev"));
-// Sessions
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 60000 * 60 * 8,
-      sameSite: "None",
-      secure: process.env.NODE_ENV === "production",
-    },
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  })
-);
+
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(flash());
 
 app.use((req, res, next) => {
-  console.log(req.session);
+  console.log(req.session); //check if this works with JWT
   next();
 });
 

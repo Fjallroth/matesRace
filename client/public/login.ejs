@@ -15,6 +15,34 @@
       defer
     ></script>
     <script src="../assets/js/init-alpine.js"></script>
+    <script>
+      document.getElementById('login-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        const email = document.getElementById('email-input').value;
+        const password = document.getElementById('password-input').value;
+    
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          localStorage.setItem('jwt', data.token);
+          // Here you can redirect to the desired page after successful login
+          window.location.href = '/raceMates'; 
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      });
+    </script>
   </head>
   <body>
 
@@ -44,7 +72,7 @@
               >
                 Login
               </h1>
-              <form action="/login" method="POST">
+              <form action="/login" method="POST" id="login-form">
               <label class="block text-sm">
                 <span class="text-gray-700 dark:text-gray-400">Email</span>
                 <input

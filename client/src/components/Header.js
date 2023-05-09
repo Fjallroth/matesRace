@@ -8,6 +8,10 @@ const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
   const toggleHamburger = () => {
     setHamburgerOpen(!hamburgerOpen);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    window.location.href = "/logout";
+  };
 
   return (
     <header className="header w-full">
@@ -39,6 +43,7 @@ const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
                 <a
                   href="/logout"
                   className="block text-purple-600 hover:text-purple-800 text-center"
+                  onClick={handleLogout}
                 >
                   Logout
                 </a>
