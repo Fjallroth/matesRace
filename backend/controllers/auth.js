@@ -43,7 +43,11 @@ exports.postLogin = (req, res, next) => {
       const token = jwt.sign(user.toJSON(), process.env.JWTKey, {
         expiresIn: "8h",
       });
-      res.cookie("token", token, { httpOnly: true, sameSite: "Lax" });
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Lax",
+        secure: true,
+      });
       res.redirect("/raceMates");
     });
   });
@@ -103,7 +107,11 @@ exports.postSignup = (req, res, next) => {
         const token = jwt.sign({ id: user._id }, process.env.JWTKey, {
           expiresIn: "8h",
         });
-        res.cookie("token", token, { httpOnly: true, sameSite: "Lax" });
+        res.cookie("token", token, {
+          httpOnly: true,
+          sameSite: "Lax",
+          secure: true,
+        });
         return res.json({ user, token });
       });
     }
