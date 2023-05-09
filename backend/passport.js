@@ -1,42 +1,24 @@
-const LocalStrategy = require("passport-local").Strategy;
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 const mongoose = require("mongoose");
 const User = require("../models/User");
 
 module.exports = function (passport) {
+  const opts = {};
+  opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+  opts.secretOrKey = process.env.JWTKey; // Use your JWT secret here
+
   passport.use(
-    new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      User.findOne({ email: email.toLowerCase() }, (err, user) => {
+    new JwtStrategy(opts, (jwt_payload, done) => {
+      User.findById(jwt_payload.id, (err, user) => {
         if (err) {
-          return done(err);
+          return done(err, false);
         }
         if (!user) {
-          return done(null, false, { msg: `Email ${email} not found.` });
+          return done(null, false, { msg: `User not found.` });
         }
-        if (!user.password) {
-          return done(null, false, {
-            msg: "Your account was registered using a sign-in provider. To enable password login, sign in using a provider, and then set a password under your user profile.",
-          });
-        }
-        user.comparePassword(password, (err, isMatch) => {
-          if (err) {
-            return done(err);
-          }
-          if (isMatch) {
-            return done(null, user);
-          }
-          return done(null, false, { msg: "Invalid email or password." });
-        });
+        return done(null, user);
       });
     })
   );
-
-  passport.serializeUser((user, done) => {
-    console.log("serialize");
-    done(null, user.id);
-  });
-
-  passport.deserializeUser((id, done) => {
-    console.log("deserialize");
-    User.findById(id, (err, user) => done(err, user));
-  });
 };
