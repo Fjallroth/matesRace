@@ -44,7 +44,7 @@ exports.postLogin = (req, res, next) => {
         expiresIn: "8h",
       }); //createkeys
       // Store the JWT token in a cookie
-      res.cookie("jwt", token, { httpOnly: true, maxAge: 8 * 60 * 60 * 1000 });
+      res.cookie("jwt", token, { httpOnly: false, maxAge: 8 * 60 * 60 * 1000 });
       // Redirect the user to the desired page
       res.redirect("/raceMates");
     });
