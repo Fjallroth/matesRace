@@ -45,7 +45,7 @@ exports.postLogin = (req, res, next) => {
       });
       res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "Lax",
+        sameSite: "None",
         secure: true,
       });
       console.log(res.cookie);
@@ -110,7 +110,7 @@ exports.postSignup = (req, res, next) => {
         });
         res.cookie("token", token, {
           httpOnly: true,
-          sameSite: "Lax",
+          sameSite: "None",
           secure: true,
         });
         console.log(res.cookie);

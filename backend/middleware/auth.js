@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 module.exports = {
   ensureAuth: async function (req, res, next) {
-    const token = req.cookies.token; // Get the token from the cookies
+    const token = req.cookies.token;
     if (!token) {
       return res.status(401).json({ error: "Unauthorized. Please log in." });
     }

@@ -27,6 +27,4 @@ router.get("/linkStrava", ensureAuth, raceController.linkStrava);
 
 router.get("/stravaCallback", ensureAuth, raceController.stravaCallback);
 
-//delete ride?
-
 module.exports = router;
