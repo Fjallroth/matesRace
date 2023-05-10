@@ -373,6 +373,6 @@ module.exports = {
     const userid = req.query.state;
     const userStravaToken = req.query.code;
     getUserData(userid, userStravaToken);
-    res.redirect("/raceMates");
+    res.redirect("/");
   },
 };
