@@ -43,6 +43,7 @@ exports.postLogin = (req, res, next) => {
       const token = jwt.sign(user.toJSON(), process.env.JWTKey, {
         expiresIn: "8h",
       });
+      req.session.token = token;
       res.cookie("token", token, {
         httpOnly: true,
         sameSite: "None",
@@ -108,6 +109,7 @@ exports.postSignup = (req, res, next) => {
         const token = jwt.sign({ id: user._id }, process.env.JWTKey, {
           expiresIn: "8h",
         });
+        req.session.token = token;
         res.cookie("token", token, {
           httpOnly: true,
           sameSite: "None",

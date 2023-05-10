@@ -349,6 +349,12 @@ module.exports = {
     //res.redirect('/raceMates')
   },
   stravaCallback: async (req, res, next) => {
+    const token = req.session.token || req.cookies.token;
+    if (!token) {
+      console.error("No token found in session or cookies");
+      res.sendStatus(500);
+      return;
+    }
     console.log(req.query.state);
     try {
       console.log(req.query.code);
