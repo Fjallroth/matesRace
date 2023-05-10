@@ -113,7 +113,8 @@ exports.postSignup = (req, res, next) => {
           sameSite: "Lax",
           secure: true,
         });
-        return res.json({ user, token });
+        console.log(res.cookie);
+        res.redirect("/raceMates");
       });
     }
   );

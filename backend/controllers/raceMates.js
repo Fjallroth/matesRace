@@ -2,14 +2,16 @@ const axios = require("axios");
 const Races = require("../models/Race");
 const User = require("../models/User");
 const moment = require("moment");
-const qs = require("qs");
-const { base } = require("../models/Race");
 require("dotenv").config({ path: "./config/.env" });
 const STRAVA_CLIENT_ID = process.env.STRAVA_CLIENT_ID;
 const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const callbackURL = "https://mates-race.vercel.app/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
+  if (!user.usertokenExpire) {
+    console.log("No token expiry found. Please link Strava.");
+    return;
+  }
   const now = moment().unix();
   if (now >= user.usertokenExpire) {
     console.log("token expired");
