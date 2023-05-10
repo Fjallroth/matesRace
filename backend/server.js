@@ -27,13 +27,15 @@ app.use(logger("dev"));
 app.use(cookieParser());
 app.use(passport.initialize());
 
-session({
-  secret: "keyboard cat",
-  cookie: { maxAge: 60000 * 60 * 8, sameSite: "lax" },
-  resave: true,
-  saveUninitialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection }),
-});
+app.use(
+  session({
+    secret: process.env.JWTKey,
+    cookie: { maxAge: 60000 * 60 * 8, sameSite: "lax" },
+    resave: true,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
 
 app.use(
   cors({
