@@ -1,4 +1,3 @@
-//rafce
 import Race from "./Task";
 const Tasks = ({
   races,

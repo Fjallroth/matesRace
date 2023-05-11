@@ -15,7 +15,6 @@ const App = () => {
   useEffect(() => {
     const getRaces = async () => {
       const racesFromServer = await fetchRace();
-      console.log(racesFromServer.races);
       setTasks(racesFromServer.races);
       setUserId(racesFromServer.user);
       console.log("done");
@@ -85,16 +84,23 @@ const App = () => {
     leaderboard.sort((a, b) => {
       return a.totalTime - b.totalTime;
     });
-
+    console.log(leaderboard);
     return leaderboard;
   };
 
   const fetchRace = async () => {
-    const res = await fetch("/raceMates/races");
-    const data = await res.json();
-    console.log("fetch race");
-    console.log(data);
-    return data;
+    try {
+      const res = await fetch("/raceMates/races");
+      if (!res.ok) {
+        throw new Error(res.statusText);
+      }
+      const data = await res.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Failed to fetch races:", error);
+      return { races: [] };
+    }
   };
 
   const planRace = async (race) => {

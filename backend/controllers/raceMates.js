@@ -8,43 +8,55 @@ const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const callbackURL = "https://mates-race.vercel.app/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
-  if (!user.usertokenExpire) {
-    console.log("No token expiry found. Please link Strava.");
-    return;
-  }
-  const now = moment().unix();
-  if (now >= user.usertokenExpire) {
-    console.log("token expired");
-    console.log(user.userStravaAccess);
+  return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.post("https://www.strava.com/oauth/token", {
-        client_id: process.env.STRAVA_CLIENT_ID,
-        client_secret: process.env.STRAVA_CLIENT_SECRET,
-        grant_type: "refresh_token",
-        refresh_token: user.userStravaRefresh,
-      });
-      console.log(data);
-      console.log(user._id);
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          userStravaAccess: data.access_token,
-          userStravaRefresh: data.refresh_token,
-          usertokenExpire: data.expires_at,
-        },
-        { new: true }
-      );
+      if (!user.usertokenExpire) {
+        console.log("No token expiry found. Please link Strava.");
+        resolve();
+        return;
+      }
+      const now = moment().unix();
+      if (now >= user.usertokenExpire) {
+        console.log("token expired");
+        console.log(user.userStravaAccess);
+        try {
+          const { data } = await axios.post(
+            "https://www.strava.com/oauth/token",
+            {
+              client_id: process.env.STRAVA_CLIENT_ID,
+              client_secret: process.env.STRAVA_CLIENT_SECRET,
+              grant_type: "refresh_token",
+              refresh_token: user.userStravaRefresh,
+            }
+          );
+          console.log(data);
+          console.log(user._id);
+          const updatedUser = await User.findOneAndUpdate(
+            { _id: user._id },
+            {
+              userStravaAccess: data.access_token,
+              userStravaRefresh: data.refresh_token,
+              usertokenExpire: data.expires_at,
+            },
+            { new: true }
+          );
 
-      console.log("Updated User:", updatedUser);
+          console.log("Updated User:", updatedUser);
+        } catch (error) {
+          console.error("Error refreshing Strava token:", error.message);
+          throw error;
+        }
+      } else {
+        console.log(now);
+        console.log(user.usertokenExpire);
+        console.log("token valid");
+        resolve();
+        return;
+      }
     } catch (error) {
-      console.error("Error refreshing Strava token:", error.message);
-      throw error;
+      reject(error);
     }
-  } else {
-    console.log(now);
-    console.log(user.usertokenExpire);
-    console.log("token valid");
-  }
+  });
 };
 
 async function getUserData(userid, userStravaToken) {
@@ -61,8 +73,10 @@ async function getUserData(userid, userStravaToken) {
     );
     const data = response.data;
     updateUserWithData(data, userid);
+    return response.data;
   } catch (err) {
     console.log(err);
+    return null;
   }
 }
 async function updateUserWithData(data, userid) {
@@ -125,19 +139,19 @@ module.exports = {
           { joinRequests: req.user.id },
         ],
       })
-        .populate("joinRequests")
+        .populate("joinRequests", "_id")
         .sort({ startDate: 1 });
-      console.log(req.user._id);
       console.log(races);
-      res.json({ races: races, user: req.user._id });
+      res.json({ races: races, user: req.user.id });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Server Error" });
     }
   },
   planRace: async (req, res) => {
-    console.log(req.body);
-    console.log(req.user._id);
+    if (!req.user || !req.user.property) {
+      return res.status(400).send("User data is missing or incomplete");
+    }
     if (!req.user.userStravaAccess) {
       res.status(400).json({ message: "Strava is not yet linked" });
       return;
@@ -297,46 +311,52 @@ module.exports = {
     }
   },
   approveJoinRequest: async (req, res) => {
-    const userId = req.user.id;
-    const raceId = req.body.raceId;
-    const participantId = req.body.participantId;
-
     try {
-      // Check if the user is the race organizer
-      const race = await Races.findById(raceId);
-      if (!race) {
-        return res.status(404).json({ message: "Race not found" });
+      const user = await User.findOne({ _id: req.params.userId });
+      const userId = req.user.id;
+      const raceId = req.body.raceId;
+      const participantId = req.body.participantId;
+
+      try {
+        // Check if the user is the race organizer
+        const race = await Races.findById(raceId);
+        if (!race) {
+          return res.status(404).json({ message: "Race not found" });
+        }
+        if (race.organiserID !== userId) {
+          return res
+            .status(403)
+            .json({ message: "Only the organizer can approve join requests" });
+        }
+
+        // Check if the join request exists
+        if (!race.joinRequests.includes(participantId)) {
+          return res.status(404).json({ message: "Join request not found" });
+        }
+
+        // Add participant to the race
+        await Races.findByIdAndUpdate(
+          raceId,
+          { $addToSet: { participants: participantId } },
+          { new: true }
+        );
+
+        // Remove the join request from the race
+        await Races.findByIdAndUpdate(
+          raceId,
+          { $pull: { joinRequests: participantId } },
+          { new: true }
+        );
+
+        console.log("Join request approved");
+        res.json({ message: "Join request approved" });
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Server Error" });
       }
-      if (race.organiserID !== userId) {
-        return res
-          .status(403)
-          .json({ message: "Only the organizer can approve join requests" });
-      }
-
-      // Check if the join request exists
-      if (!race.joinRequests.includes(participantId)) {
-        return res.status(404).json({ message: "Join request not found" });
-      }
-
-      // Add participant to the race
-      await Races.findByIdAndUpdate(
-        raceId,
-        { $addToSet: { participants: { user: participantId } } },
-        { new: true }
-      );
-
-      // Remove the join request from the race
-      await Races.findByIdAndUpdate(
-        raceId,
-        { $pull: { joinRequests: participantId } },
-        { new: true }
-      );
-
-      console.log("Join request approved");
-      res.json({ message: "Join request approved" });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: "Server Error" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send("Error approving join request");
     }
   },
 
