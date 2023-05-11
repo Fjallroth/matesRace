@@ -8,7 +8,10 @@ const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const callbackURL = "https://mates-race.vercel.app/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
-  if (!user.usertokenExpire) {
+  if (!user) {
+    console.log("No user provided. Please check the user ID.");
+    return;
+  } else if (!user.usertokenExpire) {
     console.log("No token expiry found. Please link Strava.");
     return;
   }
