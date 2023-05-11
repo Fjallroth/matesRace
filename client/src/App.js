@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import RaceContainer from "./components/RaceContainer";
 import PlanRace from "./components/PlanRace";
 import AddRace from "./components/AddRace";
-import PrevRaceContainer from "./components/PrevRaceContainer";
 
 const App = () => {
   const [showPlanRace, setshowPlanRace] = useState(false);
@@ -16,14 +15,17 @@ const App = () => {
   useEffect(() => {
     const getRaces = async () => {
       const racesFromServer = await fetchRace();
-      console.log(racesFromServer);
+      console.log(racesFromServer.races);
       setTasks(racesFromServer.races);
       setUserId(racesFromServer.user);
+      console.log("done");
+      console.log("userId after set:", racesFromServer.user);
     };
     getRaces();
   }, []);
 
   const updateRaces = async () => {
+    console.log("updating races");
     const racesFromServer = await fetchRace();
     setTasks(racesFromServer.races);
     setUserId(racesFromServer.user);
@@ -88,17 +90,11 @@ const App = () => {
   };
 
   const fetchRace = async () => {
-    try {
-      const res = await fetch("/raceMates/races");
-      if (!res.ok) {
-        throw new Error(res.statusText);
-      }
-      const data = await res.json();
-      return data;
-    } catch (error) {
-      console.error("Failed to fetch races:", error);
-      return { races: [] };
-    }
+    const res = await fetch("/raceMates/races");
+    const data = await res.json();
+    console.log("fetch race");
+    console.log(data);
+    return data;
   };
 
   const planRace = async (race) => {
@@ -126,7 +122,6 @@ const App = () => {
     await updateRaces();
   };
   const fetchRide = async (race) => {
-    console.log(race);
     console.log(race._id);
     const res = await fetch("/raceMates/selectRide", {
       method: "POST",
@@ -139,7 +134,7 @@ const App = () => {
     const displayData = data.rides.map((e) => ({
       name: e.name,
       segments: e.matchingSegments,
-      raceId: race._id,
+      raceID: race._id,
     }));
     console.log(displayData);
     setRides(displayData);
