@@ -88,17 +88,9 @@ const App = () => {
   };
 
   const fetchRace = async () => {
-    try {
-      const res = await fetch("/raceMates/races");
-      if (!res.ok) {
-        throw new Error(res.statusText);
-      }
-      const data = await res.json();
-      return data;
-    } catch (error) {
-      console.error("Failed to fetch races:", error);
-      return { races: [] };
-    }
+    const res = await fetch("/raceMates/races");
+    const data = await res.json();
+    return data;
   };
   const planRace = async (race) => {
     console.log(race);
