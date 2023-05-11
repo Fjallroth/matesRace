@@ -349,12 +349,6 @@ module.exports = {
     //res.redirect('/raceMates')
   },
   stravaCallback: async (req, res, next) => {
-    const token = req.session.token || req.cookies.token;
-    if (!token) {
-      console.error("No token found in session or cookies");
-      res.sendStatus(500);
-      return;
-    }
     console.log(req.query.state);
     try {
       console.log(req.query.code);
@@ -370,9 +364,15 @@ module.exports = {
       res.sendStatus(500);
       return;
     }
+    const token = req.session.token || req.cookies.token;
+    if (!token) {
+      console.error("No token found in session or cookies");
+      res.sendStatus(500);
+      return;
+    }
     const userid = req.query.state;
     const userStravaToken = req.query.code;
     getUserData(userid, userStravaToken);
-    res.redirect("/");
+    res.redirect("/raceMates");
   },
 };
