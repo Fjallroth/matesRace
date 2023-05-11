@@ -23,7 +23,7 @@ const Header = ({ title, profileLink, onAdd, showAdd, buttonTitle }) => {
             >
               <img
                 className="object-cover w-8 h-8 rounded-full"
-                src="<%= user.userStravaPic %>"
+                src="https://i.imgur.com/gkYrX97.png"
                 alt=""
                 aria-hidden="true"
               />
