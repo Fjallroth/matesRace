@@ -293,6 +293,8 @@ module.exports = {
 
   submitRide: async (req, res) => {
     console.log("Authenticated user:", req.user);
+    console.log(req.body.segements);
+    console.log(req.body.raceId);
     const user = req.user._id;
 
     try {
