@@ -151,7 +151,7 @@ module.exports = {
     }
   },
   planRace: async (req, res) => {
-    if (!req.user || !req.user.property) {
+    if (!req.user) {
       return res
         .status(400)
         .json({ error: "User data is missing or incomplete" });
