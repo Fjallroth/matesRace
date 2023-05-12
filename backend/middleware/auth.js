@@ -8,7 +8,7 @@ module.exports = {
     }
     try {
       const decoded = jwt.verify(token, process.env.JWTKey);
-      console.log(decoded);
+      console.log(decoded._id);
       req.user = await User.findOne({ _id: decoded._id });
       console.log(req.user);
 

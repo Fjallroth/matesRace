@@ -8,9 +8,10 @@ const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const callbackURL = "https://mates-race.vercel.app/raceMates/stravaCallback";
 
 const getUserRefresh = async (user) => {
+  console.log(user);
   return new Promise(async (resolve, reject) => {
     try {
-      if (!user.usertokenExpire) {
+      if (!user || !user.usertokenExpire) {
         console.log("No token expiry found. Please link Strava.");
         resolve();
         return;
@@ -132,6 +133,7 @@ module.exports = {
   },
   getRaces: async (req, res) => {
     await getUserRefresh(req.user);
+    console.log(req.user);
     try {
       const races = await Races.find({
         $or: [
@@ -150,10 +152,12 @@ module.exports = {
   },
   planRace: async (req, res) => {
     if (!req.user || !req.user.property) {
-      return res.status(400).send("User data is missing or incomplete");
+      return res
+        .status(400)
+        .json({ error: "User data is missing or incomplete" });
     }
     if (!req.user.userStravaAccess) {
-      res.status(400).json({ message: "Strava is not yet linked" });
+      res.status(401).json({ message: "Strava is not yet linked" });
       return;
     }
     try {
