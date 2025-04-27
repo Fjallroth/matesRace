@@ -25,14 +25,8 @@
     { "source": "/login", "destination": "/backend/server.js" }, 
     { "source": "/signup", "destination": "/backend/server.js" }, 
     { "source": "/logout", "destination": "/backend/server.js" },
-    { "source": "/race(/.*)?", "destination": "/backend/server.js" },
-    
-
-    
-    {
-      
-      "destination": "/index.html" 
-    }
+    { "source": "/race(/.*)?", "destination": "/backend/server.js" }
+  
 
     ]
 }
