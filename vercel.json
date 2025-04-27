@@ -30,6 +30,7 @@
       
       "source": "/((?!login$|signup$|logout$|race(/.*)?$|.*\\.).*)",
       "destination": "/index.html" 
+      
     }
 
 
