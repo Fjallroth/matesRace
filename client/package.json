@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env CI=false react-scripts build",
+    "build": "react-scripts build",
     "postbuild": "mv build/index.html build/app.html && mv build/landing.ejs build/index.html",
     "test": "react-scripts test",
     "purgecss": "purgecss -c ./purgecss.config.js",
