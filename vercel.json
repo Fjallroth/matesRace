@@ -2,49 +2,38 @@
   "version": 2,
   "builds": [
     {
-      // Build the Node.js backend server as a serverless function
-      "src": "backend/package.json", // Point to package.json to trigger npm install
+      
+      "src": "backend/package.json", 
       "use": "@vercel/node",
       "config": {
-        // Explicitly include the 'views' directory and its contents
-        // so the backend function can find EJS templates and related static assets.
+        
         "includeFiles": ["backend/views/**"]
       }
     },
     {
-      // Build the React frontend
-      "src": "client/package.json", // Point to package.json to find build script
-      "use": "@vercel/static-build", // Use the static build preset
+      
+      "src": "client/package.json", 
+      "use": "@vercel/static-build", 
       "config": {
-        // Output directory relative to client/package.json
+        
         "distDir": "build"
       }
     }
   ],
   "rewrites": [
-    // --- Backend API/EJS Routes ---
-    // Route specific known backend paths to the serverless function.
-    // Ensure these paths match what your backend server expects.
-    { "source": "/login", "destination": "/backend/server.js" }, // Matches GET/POST /login
-    { "source": "/signup", "destination": "/backend/server.js" }, // Matches GET/POST /signup
-    { "source": "/logout", "destination": "/backend/server.js" }, // Matches GET /logout (or POST if changed)
-    // Match /race and anything after it (e.g., /race/create, /race/123)
+    
+    { "source": "/login", "destination": "/backend/server.js" }, 
+    { "source": "/signup", "destination": "/backend/server.js" }, 
+    { "source": "/logout", "destination": "/backend/server.js" },
     { "source": "/race(/.*)?", "destination": "/backend/server.js" },
-    // Add any other specific API route prefixes here
-    // { "source": "/api/(.*)", "destination": "/backend/server.js" }, // Example if you add an /api prefix later
+    
 
-    // --- Frontend SPA Fallback ---
-    // Rewrite all other GET requests that DON'T look like files AND are NOT the backend routes
-    // listed above to serve the React app's index.html.
+    
     {
-      // Match any path that:
-      // 1. Doesn't contain a dot `.` (likely not a direct file request)
-      // 2. Doesn't exactly match the backend routes listed above
+      
       "source": "/((?!login$|signup$|logout$|race(/.*)?$|.*\\.).*)",
-      "destination": "/index.html" // Serve the main HTML file from the client build output
+      "destination": "/index.html" 
     }
 
-    // Note: Vercel automatically serves static files (like CSS, JS, images)
-    // from the output of the @vercel/static-build step if no rewrite matches.
-  ]
+    ]
 }
