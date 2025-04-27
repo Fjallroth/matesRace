@@ -298,9 +298,11 @@ module.exports = {
     const user = req.user._id;
 
     try {
-      //get segments from ride
+      console.log(req.body.segments);
+      console.log(user);
+
       await Races.findOneAndUpdate(
-        { _id: req.body.raceId, "participants.user": user },
+        { _id: req.body.raceID },
         {
           $set: {
             "participants.$[elem].segments": req.body.segments,
