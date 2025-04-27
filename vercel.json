@@ -25,7 +25,7 @@
     { "source": "/signup", "destination": "/backend/server.js" },
     { "source": "/logout", "destination": "/backend/server.js" }, 
    
-    { "source": "/race(/.*)?", "destination": "/backend/server.js" },
+    { "source": "/race(/.*)?", "destination": "/backend/server.js" }
    
 
 
