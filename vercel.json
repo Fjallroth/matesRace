@@ -1,21 +1,33 @@
-{
-    "version": 2,
-    "builds": [
-      {
-        "src": "backend/server.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "client/package.json",
-        "use": "@vercel/static-build",
-        "config": { "distDir": "build" }
+"version": 2,
+  "builds": [
+    {
+      // Build the Node.js backend server as a serverless function
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      // Build the React frontend
+      "src": "client/package.json", // Point to package.json to find build script
+      "use": "@vercel/static-build", // Use the static build preset
+      "config": {
+        // Output directory relative to client/package.json
+        "distDir": "build"
       }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/backend/server.js"
-      }
-    ]
-  }
-  
+    }
+  ],
+  "rewrites": [
+    // --- Backend Routes ---
+    // Explicitly list known backend routes/prefixes that should go to the server function
+    { "source": "/login", "destination": "/backend/server.js" },
+    { "source": "/signup", "destination": "/backend/server.js" },
+    { "source": "/logout", "destination": "/backend/server.js" },
+    { "source": "/race(/.*)?", "destination": "/backend/server.js" },
+
+    {
+      
+      "source": "/((?!login$|signup$|logout$|race(/.*)?$|.*\\.).*)",
+      "destination": "/index.html" 
+    }
+
+  ]
+
