@@ -1,0 +1,60 @@
+{
+  "name": "-a",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "autoprefixer": "^10.4.14",
+    "color": "^4.2.3",
+    "font-awesome": "^4.7.0",
+    "postcss": "^8.4.22",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "^3.3.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "cross-env CI=false react-scripts build",
+    "postbuild": "mv build/index.html build/app.html && mv build/landing.ejs build/index.html",
+    "test": "react-scripts test",
+    "purgecss": "purgecss -c ./purgecss.config.js",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "purgecss": "^5.0.0",
+    "webpack-bundle-analyzer": "^4.8.0",
+    "webpack-cli": "^5.1.0"
+  },
+  "purgecss": {
+    "content": [
+      "./src/**/*.js",
+      "./public/index.html"
+    ],
+    "css": [
+      "./build/**/*.css"
+    ]
+  }
+}
