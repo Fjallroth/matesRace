@@ -29,7 +29,6 @@
     {
       
       "source": "/((?!login$|signup$|logout$|race(/.*)?$|.*\\.).*)",
-      "methods": ["GET"], 
       "destination": "/index.html" 
     }
 
